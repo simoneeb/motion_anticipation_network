@@ -86,7 +86,7 @@ class plotting(object):
         ax[0].set_ylabel('cells')
 
 
-        for i in range(0,self.nb_GC_cells,1):
+        for i in range(0,self.nb_GC_cells):
 
 
             item = ax[1].plot(self.out['VG'][i], label = f'GC {i}')

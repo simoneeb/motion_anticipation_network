@@ -122,7 +122,7 @@ class stim_moving_object_for_2D_net(object):
 
     def load_filter(self):
 
-        fp = '/user/sebert/home/Documents/Simulations/motion/chen_2013/chen_2013_fast_OFF_filter.csv'
+        fp = '/Users/simone/Documents/Simulations/chen_2013/chen_2013_fast_OFF_filter.csv'
         chen_data = pd.read_csv(fp)
         cols = chen_data.columns
         #chen_data.info()

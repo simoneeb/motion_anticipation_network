@@ -31,8 +31,7 @@ nb_repeats = 10
 
 # get desired output 
 # bipolar response after gain control
-# ganglion response before gain control ??
-# ganglion response after gain control ?? 
+
 s = 0.81
 fp = f'/user/sebert/home/Documents/Simulations/motion/anticipation_1D/Reciporcal/Reciporcal_fitted/noGCGainControl/wBA/wBA_31.0/smooth_{s}'
 with open(f'{fp}/out', 'rb') as handle:
@@ -40,8 +39,7 @@ with open(f'{fp}/out', 'rb') as handle:
 
 res = out['RB'] 
 res = res[50,:]
-# plt.plot(res)
-# plt.show()
+
 
 # load initial paramset
 
@@ -69,15 +67,12 @@ es = cma.CMAEvolutionStrategy(x0, sigma0, {'popsize' : popsize})
 # create stimulus
 stimulus_maker = stim_moving_object_for_2D_net(params,
                                                 filepath = None)
-# inp = stimulus_maker.smooth_motion()
 
 bar = stimulus_maker.bar_smooth()
-#tkern = stimulus_maker.alpha_kernel()
 
 _ = stimulus_maker.load_filter()
 tkern = stimulus_maker.filter_biphasic_norm()
-# plt.plot(tkern)
-# plt.show()
+
 _,_ = stimulus_maker.OPL()
 inp = stimulus_maker.F()
 
@@ -93,8 +88,6 @@ def run_one_pset(pset):
 
 
         err = compute_mse(res,simu[-1])
-        # save error
-        #errors.append(err)
 
         return err
 
@@ -116,39 +109,16 @@ for n in range(nb_repeats):
 
     bestparams = es.result.xbest
     paramis_best = np.exp(bestparams) *scales
+
+
     # put values in params
     for i,parami in enumerate(paramis):
         params[parami]=paramis_best[i]
         print(f'{parami} = {paramis_best[i]}')
-    #bestout = simulate(inp)
 
-    # plt.plot(res, label = 'ACM')
-    # plt.plot(bestout[300,:], label = 'Reciporcal')
-    # plt.legend()
-    # plt.show()
 
     errors_all.append(errors.mean())
-
-
-# bestparams = es.result.xbest
-# paramis_best = np.exp(bestparams) *scales
-# # put values in params
-# for i,parami in enumerate(paramis):
-#     params[parami]=paramis_best[i]
-#     print(f'{parami} = {paramis_best[i]}')
-# bestout = simulate(inp)
-
-# plt.plot(errors_all)
-# plt.title('mean error aftereach iteration')
-# plt.show()
-# plt.plot(res, label = 'ACM')
-# plt.plot(bestout[300,:], label = 'Reciporcal')
-# plt.legend()
-# plt.show()
 
 # save best params
 with open(f'{fp}/params_opt_mono_to_fitted', 'wb') as handle:
     pickle.dump(params, handle)
-# with open(f'{fp}/params_opt_mono_linear.json', 'wb') as handle:
-#     json.dump(params, handle)
-# compare other outputs

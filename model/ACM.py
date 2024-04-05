@@ -117,8 +117,6 @@ class ACM(object):
             self.RG[c,:] = self.NG[c,:]*self.GG[c,:]
 
 
-
-
     def collect_output(self):
 
         out = {

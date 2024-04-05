@@ -12,8 +12,8 @@ def make_params(param_names = None, param_vals = None, filepath = None):
 
 
     # define parameter
-    nb_cells = 300
-    nb_GC_cells = 300
+    nb_cells = 450
+    nb_GC_cells = 450
     saving_range = 50
     rf_GC = 0.065*6 # 0.09s
     rf_GC_s = 0.485*6 # 0.09s
@@ -24,11 +24,11 @@ def make_params(param_names = None, param_vals = None, filepath = None):
     std_GC_s = rf_GC_s/6
 
     spacing = 0.005  
-    dt = 0.001
+    dt = 0.01#1/40# 0.001
 
 
     speed = 0.81 
-    bar_width = 0.160 
+    bar_width = 0.150 
     stimulus_polarity = 1
     stop = None
     start_cell = 150#-16
@@ -44,7 +44,6 @@ def make_params(param_names = None, param_vals = None, filepath = None):
     tauB =0.008   #0.01
     tauG = 0.01   # 0.01  #0.01
 
-    #0.03825167 0.1199695  0.37569818
     tauOPL = 0.04 #0.086   #0.05508089
     tauOPL2 = 0.0876 #0.05730816
     SF =0.# 1.
@@ -53,10 +52,10 @@ def make_params(param_names = None, param_vals = None, filepath = None):
     wAB = 46.#22.   # 10.#44. #= RAM mono linear fitted to ACM   # RAM fitted to ACM = 22
     wBA = 46.# 31.#31. #= RAM mono linear fitted to ACM   # RAM fitted to ACM = 31
 
-    wA2B = 46.
-    wA2A = 0 #46.0
+    wA2B = 0.#46.
+    wA2A = 0. #46.0
     wAA2 = 0.
-    wBA2 = 16.#46.
+    wBA2 = 0.#16.#46.
 
     d = 1
     wGB = .0400
@@ -77,21 +76,21 @@ def make_params(param_names = None, param_vals = None, filepath = None):
     slope_n = 1
     threshold_n = 0.0
 
-    plastic_to_G = True
-    plastic_to_A =False
-    krecB = 1. #0.78# 2.0
-    krelB = .5 #0.64# 2.0
-    betaB =0.0#0.6 #0.5#0.1  #0.3#.1#3#0.1#.30 #1360.0
+    plastic_to_G = False
+    plastic_to_A = False
+    krecB = 1.  #0.78# 2.0
+    krelB = .5  #0.64# 2.0
+    betaB =0.0  #0.6 #0.5#0.1  #0.3#.1#3#0.1#.30 #1360.0
 
 
-    krecA = 1.#3#0.066#2.#35.66#2.0
-    krelA = .5 #6#0.0015#2.#0.54
-    betaA =0.0# 0.03#.0.04 #0.2#0.5# 0.03#0.3#2#1#.3#0.1#.300 #1360.0
+    krecA = 1. # 3#0.066#2.#35.66#2.0
+    krelA = .5 # 6#0.0015#2.#0.54
+    betaA =0.0 # 0.03#.0.04 #0.2#0.5# 0.03#0.3#2#1#.3#0.1#.300 #1360.0
 
 
-    krecA2 = .1#3#0.066#2.#35.66#2.0
-    krelA2 = .1#6#0.0015#2.#0.54
-    betaA2 =0.0#0.6#0.2#0.5# 0.03#0.3#2#1#.3#0.1#.300 #1360.0
+    krecA2 = .1 #3#0.066#2.#35.66#2.0
+    krelA2 = .1 #6#0.0015#2.#0.54
+    betaA2 =0.0 #0.6#0.2#0.5# 0.03#0.3#2#1#.3#0.1#.300 #1360.0
 
     X0 = 0
 
@@ -188,26 +187,10 @@ def make_params(param_names = None, param_vals = None, filepath = None):
 
                 'tauActG' : tauActG,
                 'hG' : hG
-
     }
     if param_names is not None:
         for i,nam in enumerate(param_names):
-            #print(nam,param_vals[i])
             params[nam] = param_vals[i]
-
-
-    #print(params)
-    # if len(sys.argv) > 3:
-    #     params[f'{sys.argv[2]}'] = float(sys.argv[3])
-        
-        
-    # if len(sys.argv) > 5:
-    #     params[f'{sys.argv[4]}'] = float(sys.argv[5])
-
-
-    # if len(sys.argv) > 7:
-    #     params[f'{sys.argv[6]}'] = float(sys.argv[7])
-
 
 
     distance = nb_cells*spacing #599*0.005 # from spacing between cells 30 mum
@@ -229,13 +212,6 @@ def make_params(param_names = None, param_vals = None, filepath = None):
     params['tps'] = tps
 
 
-
-
-    # filepath = '/user/sebert/home/Documents/Simulations/motion/anticipation_1D/new/bipolar_pooling_lateral_OFF_laplacian_GainControl/betaA/betaA_0/smooth_2.6'
-    # with open(f'{filepath}/params', 'rb') as handle:
-    #     params = pickle.load(handle)
-
-    # print(params)
     if filepath is not None:
 
         if not os.path.isdir(filepath):
@@ -250,5 +226,38 @@ def make_params(param_names = None, param_vals = None, filepath = None):
             json.dump(params, handle,indent=4)
 
     return params
-    # with open(f'/user/sebert/home/Documents/Simulations/motion/anticipation_1D/selma/bipolar_pooling_lateral/w/w_60/smooth_4.0/params', 'rb') as handle:
-    #     params =  pickle.load(handle)
+   
+
+
+def modify_params(params, param_names,values):
+    for i,parami in enumerate(param_names):
+        params[parami] = values[i]
+
+    nb_cells = params['nb_cells']
+    dt = params['dt']
+    spacing = params['spacing']
+    rf_BC = params['rf_BC']
+
+    distance = nb_cells*spacing  
+    duration = distance/params['speed']
+    time = np.arange(0,duration,dt)
+    tps = len(time)
+
+
+    pos_rf_mid = np.linspace(0,distance,nb_cells) #mm
+    #pos_rf_mid = pos_rf_mid[1:-1] #mm
+    cell_spacing = np.mean(np.diff(pos_rf_mid))
+    rf_overlap = rf_BC/cell_spacing
+
+
+    params['distance'] = distance
+    params['duration'] = duration
+    params['rf_overlap'] = rf_overlap
+    params['cell_spacing'] = cell_spacing
+    params['tps'] = tps
+
+
+
+    return params
+
+

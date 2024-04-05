@@ -86,7 +86,7 @@ def run_ACM(params, filepath = None, save_one = False, measure_n = False, stim_t
         with open(f'{filepath}/params', 'wb') as handle:
             pickle.dump(params, handle)
 
-
+    return out 
     # only save maximum
     # with open(f'{filepath}/params.json', 'wb') as handle:
     #     json.dump(params, handle)

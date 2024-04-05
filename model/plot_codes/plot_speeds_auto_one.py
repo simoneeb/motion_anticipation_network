@@ -1,5 +1,4 @@
 from plotting import plotting
-from plotting import plotting
 import matplotlib.pyplot as plt
 import pickle
 import numpy as np
@@ -12,8 +11,8 @@ import os
 save = True
 unit = 'space'
 #speeds = np.flip([5.0,4.5,4.0,3.5,3.0,2.9,2.8,2.7,2.6])
-speeds = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,2.0]
-#speeds = [0.1,0.4,0.7,1.0,2.0]
+speeds = [0.14,0.42,0.7,0.98,1.96]
+#speeds = [0.14,0.7,1.96]
 
 #speeds = [1.0]
 
@@ -45,7 +44,7 @@ cmap = plt.get_cmap('viridis',len(speeds))
 for i,s in enumerate(speeds):
 
     fp = f'{filepath}/{param}/{par}/{stim_type}_{s}'
-
+    print(fp)
     with open(f'{fp}/out', 'rb') as handle:
         out = pickle.load(handle)
 
