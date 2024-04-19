@@ -43,8 +43,8 @@ def normalize01(x):
 
 
 
-cell_nb = 431                            # cell to fit 
-model_name  = 'reciprocal_linear_long'   # model name 
+cell_nb = 125                         # cell to fit 
+model_name  = 'reciprocal_linear_long_no_tauB'   # model name 
 speeds = [0.14,0.42,0.7,0.98,1.96]       # speeds to simulate 
      
 
@@ -94,9 +94,9 @@ dt = 0.01        # define timestep
 dt_exp = 0.025   # set timestep of experimentls 
 params = modify_params(params,['std_GC,dt'],[std_GC,dt])   # change parameter 
 
-paramis = ['wBA','wAB','tauB','tauA']  # define parameter to be fitted 
-paramis_init = np.array([2,2,1,2])     # give initial conditions, all need to be in the same oder of maginude
-scales = np.array([1,1,0.1,0.1])       # define scales for params
+paramis = ['wBA','wAB','tauA']  # define parameter to be fitted 
+paramis_init = np.array([2,2,2])     # give initial conditions, all need to be in the same oder of maginude
+scales = np.array([1,1,0.1])       # define scales for params
 #x0 = np.log(paramis_init)             # set inital conditions as log to avoid negative values 
 x0 = paramis_init                      # set inital conditions as log to avoid negative values 
 

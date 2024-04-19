@@ -12,7 +12,6 @@ from params_Reciporcal import make_params, modify_params
 from nonlinearities import N
 
 
-
 # TODO move to utils
 def N(V):
 
@@ -31,11 +30,36 @@ def gauss(x, mu, sig_c):
 def normalize01(x):
     return (x-np.min(x))/(np.max(x)-np.min(x))
 
+def measure_response_onset_index(resp):
 
+    seuil = np.mean(resp[:int(len(resp)*0.2)]) +1*np.std(resp[:int(len(resp)*0.2)])  # set a threshold to detect responses
+    idx_onset = np.nonzero(resp>seuil)[0] # get times where response highter than threshold
+    diffs = np.diff(idx_onset)              # get difference between idxs
+    idxs_breaks = np.nonzero(diffs > 1)[0] # get idxs where diffs are bigger than one, this indexes the idx_onset array
 
-cell_nb = 479                                  # cell to fit 
-model_name  = 'reciprocal_linear_long'      # model name 
-speeds = [0.14,0.42,0.7,0.98,1.96]             # speeds to simulate 
+    start = 0
+    lens = []   # measure length of response parts
+    resps = []
+    for id in idxs_breaks:
+        le = idx_onset[start]-idx_onset[id]   
+        start = id+1
+        lens.append(le)
+        resps.append([idx_onset[start],idx_onset[id]])
+    
+    le = idx_onset[start]-idx_onset[-1]
+    lens.append(le)
+    resps.append([idx_onset[start],idx_onset[-1]])
+
+    cho = np.argmax(np.abs(lens))     # get part with longest response
+   
+    idx_start= resps[cho][0]  # get indexes of this reponse
+
+ 
+    return idx_start
+
+cell_nb = 125                                       # cell to fit 
+model_name  = 'reciprocal_linear_long_no_tauB'      # model name 
+speeds = [0.14,0.42,0.7,0.98,1.96]                  # speeds to simulate 
      
 
 # get desired output 
@@ -43,8 +67,6 @@ fp = '/Users/simone/Documents/Experiments/motion_anticipation/Simone/small_antic
 with open(fp, 'rb') as handle:
     small_dict = pickle.load(handle)
 
-
-     
 
 #TODO save in fiting and load 
 rf = small_dict[cell_nb]['rf'] 
@@ -71,7 +93,6 @@ dt_exp = 0.025
 
 
 
-
 # # define parameter to be fitted 
 paramis = ['wBA','wAB','tauB','tauA']
 
@@ -91,7 +112,7 @@ with open(f'{fpout}/params_init_cell_{cell_nb}', 'rb') as handle:
     params_init = pickle.load(handle)
 
 
-
+bar_width =params_best['bar_width']
 
 # vals = [6.779169845261268,11.363323753783916,-0.10676657442322597,0.15253688899199971]
 #params_best = modify_params(params_best,['tauB'],[0.001])
@@ -106,18 +127,21 @@ for i,parami in enumerate(paramis):
 
 
 # plot simulation and compare to data 
-fig_res = plt.figure(figsize = (12,14) )
+fig_res = plt.figure(figsize = (12,10) )
 gs = fig_res.add_gridspec(nrows=len(speeds),ncols=2)
-
+fig_res.subplots_adjust(hspace = 1.)
 
 antis = []
 onsets = []
 sim_antis = []
-sim_onsets_antis = []
+sim_onsets = []
 sim_antis_init = []
 sim_onsets_init = []
 preds = []
 times = []
+
+LEatRFs = []
+sim_LEatRFs = []
 
 for i,speed in enumerate(speeds): 
     print(f'speed: {speed}')
@@ -131,7 +155,8 @@ for i,speed in enumerate(speeds):
     #res_time = np.arange(0,len(res))*dt_exp                            # corresponding time with dt = bin_bize, but starting at 0  
     res_time = small_dict['times'][speed]
     resfun = interp1d(res_time,res, fill_value='extrapolate')          # interpolation of response
-    time_dt = np.arange(res_time[0],res_time[-1],params['dt'])                   # new time with dt of simulation 
+    time_dt = np.arange(res_time[0],res_time[-1],params['dt'])         # new time with dt of simulation 
+    time_dt = time_dt-((bar_width/2)/speed)                                # center time around when leading edge hits FT center
     res_dt = resfun(time_dt)                                           # new response 
 
 
@@ -159,14 +184,49 @@ for i,speed in enumerate(speeds):
     sim_anti_init = time_dt[np.argmax(pred_init)]                                                                     # get response peak in simulation initial
     anti = time_dt[np.argmax(res_dt)]                                                                                 # get response peak in data
 
+    res_dt = normalize01(res_dt)
+    pred = normalize01(pred)
+    pred_init = normalize01(pred_init)
+
+
+    # seuil = np.mean(res_dt[:int(tps_res*0.2)]) +1*np.std(res_dt[:int(tps_res*0.2)])
+    # idx_onset = np.nonzero(res_dt>seuil)[0][0]
+    idx_onset = measure_response_onset_index(res_dt)
+
+    seuil = np.mean(pred[:int(tps_res*0.2)])+1*np.std(pred[:int(tps_res*0.2)])
+    idx_sim_onset =  np.nonzero(pred>0.01)[0][0]
+    seuil = np.mean(pred_init[:int(tps_res*0.2)])+1*np.std(pred_init[:int(tps_res*0.2)])
+    idx_sim_onset_init =  np.nonzero(pred_init>0.01)[0][0]
+
+    onset = time_dt[idx_onset]                                    # time-point of spiking onset relative to leading edge at RF center
+    sim_onset = time_dt[idx_sim_onset]
+    sim_onset_init = time_dt[idx_sim_onset_init]
+
+    x1 = small_dict['rfspace']
+    x1 = x1/speed
+    y1 = small_dict[cell_nb]['rf']
+    seuil = .1
+    idx = np.nonzero(y1>seuil)[0][0]
+    LEatRF = x1[idx]   # time-point of leading edge at RF left border, relative to same reference point
+
+    x1 = rf_space_highres*1000
+    x1 = x1/speed
+    y1 = gauss(rf_space_highres,*popt)
+    idx = np.nonzero(y1>seuil)[0][0]
+    sim_LEatRF = x1[idx]   # time-point of leading edge at RF left border, relative to same reference point
+
+
     lin = ax.plot(res_time,normalize01(res), label = '_data', color = 'blue', alpha  = 0.8)
     ax.axvline(anti, color = lin[0].get_color(), linestyle = ':')
+    ax.axvline(onset, color = lin[0].get_color(), linestyle = '--')
 
     lin = ax.plot(time_dt,normalize01(pred), label = '_simulation', color = 'orange')
     ax.axvline(sim_anti, color = lin[0].get_color(), linestyle = ':')
+    ax.axvline(sim_onset, color = lin[0].get_color(), linestyle = '--')
 
     lin = ax.plot(time_dt,normalize01(pred_init), label = '_simulation init', color = 'orange', alpha = 0.3)
     ax.axvline(sim_anti_init, color = lin[0].get_color(), linestyle = ':', alpha = 0.3)
+    ax.axvline(sim_onset_init, color = lin[0].get_color(), linestyle = '--', alpha = 0.3)
 
     ax.set_ylabel('response')
     ax.set_xlabel('time [s]')
@@ -177,6 +237,11 @@ for i,speed in enumerate(speeds):
     sim_antis_init.append(sim_anti_init)
     preds.append(pred)
     times.append(time_dt)
+    onsets.append(onset)
+    sim_onsets.append(sim_onset)
+    sim_onsets_init.append(sim_onset_init)
+    LEatRFs.append(LEatRF)
+    sim_LEatRFs.append(sim_LEatRF)
 
 ax.set_xlabel('time [s]')
 
@@ -200,7 +265,7 @@ plt.axhline(0, color = 'k', linestyle = ':')
 ax.set_xscale('log')
 ax.set_ylabel(f'distance anticipated [\mm$]')
 ax.set_xlabel('speed [mm/s]')
-
+ax.set_title('Peak Anticipation relative to leading edge at RF center')
 plt.xticks(speeds)
 ax.get_xaxis().set_major_formatter(matplotlib.ticker.ScalarFormatter())
 
@@ -208,29 +273,48 @@ ax.legend()
 
 
 
-ax = fig_res.add_subplot(gs[3:,1])                                                                            # plot onset aticipation as response start in time  - time when leading bar edge enters RF 
+ax = fig_res.add_subplot(gs[2,1])                                                                            # plot onset aticipation as response start in time  - time when leading bar edge enters RF 
 
 
-plt.scatter(speeds,antis*speeds, label = '_experiment', color = 'blue')
-plt.scatter(speeds,sim_antis*speeds, label = '_simulation', color = 'orange')
-plt.scatter(speeds,sim_antis_init*speeds, label = '_simulation init', color = 'orange',alpha = 0.3)
+sim_tOA = np.abs(sim_onsets)-np.abs(np.asarray(sim_LEatRFs)/1000)
+tOA = np.abs(onsets)-np.abs(np.asarray(LEatRFs)/1000)
 
-plt.plot(speeds,antis*speeds,label = 'data', color = 'blue')
-plt.plot(speeds,sim_antis*speeds, label = 'simulation', color = 'orange')
-plt.plot(speeds,sim_antis_init*speeds, label = 'simulation init', color = 'orange',alpha = 0.3)
+plt.scatter(speeds,tOA, label = '_experiment', color = 'blue')
+plt.scatter(speeds,sim_tOA, label = '_simulation', color = 'orange')
+#plt.scatter(speeds,sim_onsets_init, label = '_simulation init', color = 'orange',alpha = 0.3)
+
+plt.plot(speeds,tOA,label = 'data', color = 'blue')
+plt.plot(speeds,sim_tOA, label = 'simulation', color = 'orange')
+
+
+# plt.scatter(speeds,onsets, label = '_experiment', color = 'blue')
+# plt.scatter(speeds,sim_onsets, label = '_simulation', color = 'orange')
+# #plt.scatter(speeds,sim_onsets_init, label = '_simulation init', color = 'orange',alpha = 0.3)
+
+# plt.plot(speeds,np.asarray(LEatRFs)/1000,label = 'data', color = 'blue')
+# plt.plot(speeds,np.asarray(sim_LEatRFs)/1000, label = 'simulation', color = 'orange')
+# #plt.plot(speeds,sim_antis_init*speeds, label = 'simulation init', color = 'orange',alpha = 0.3)
 
 plt.axhline(0, color = 'k', linestyle = ':')
 ax.set_xscale('log')
-ax.set_ylabel(f'distance anticipated [\mm$]')
+ax.set_ylabel(f'time [s]')
 ax.set_xlabel('speed [mm/s]')
 
 plt.xticks(speeds)
 ax.get_xaxis().set_major_formatter(matplotlib.ticker.ScalarFormatter())
-
+ax.set_title('Response Onset Relative to leading edge entering the RF')
 ax.legend()
 
 
-axe = fig_res.add_subplot(gs[0,1])                                                                          # plot all responses in space data 
+
+
+
+
+
+
+
+
+axe = fig_res.add_subplot(gs[0,1])                                                                             # plot all responses in space data 
 
 
 ax2 = axe.twinx()                                                                                              # add the receptive field
@@ -265,7 +349,7 @@ else:
 axe.set_ylabel('firing rate [spikes/s]')
 axe.set_xlabel('bar center distance to RF center [$\mu m$]')
 axe.set_title('Experimental responses in space')
-
+axe.set_xlim(-800,800)
 
 ax = fig_res.add_subplot(gs[1,1])                           # plot all responses in space simulations 
 
@@ -301,6 +385,7 @@ else:
 ax.set_ylabel('R(t)')
 ax.set_xlabel('bar center distance to RF center [$\mu m$]')
 ax.set_title('Simulated responses in space')
+ax.set_xlim(-800,800)
 
 fig_res.suptitle(f' {model_name} model fit to cell {cell_nb}')
 fig_res.savefig(f'{fpout}/fit_RES.png')

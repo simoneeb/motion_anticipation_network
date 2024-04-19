@@ -11,7 +11,8 @@ def bar(t, xc, b = 0.160, v = 1):
     
 
 def measure_onset_anticipation(sim):
-
+    
+    
     onset_sim =np.argmax(sim >=1)
     #onset_ref =np.argmax(ref >=1)
 
