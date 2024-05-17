@@ -50,9 +50,9 @@ tauOPL = 0.044#0.05508089
 tauOPL2 = 0.045#0.05730816
 SF = 1.
 
-wAB = 0
-wBA = 0
-wBA2 = 0
+wAB = 0.
+wBA = 0.
+wBA2 = 0.
 d = 1
 wGB = 1.0
 wGA = 0.0

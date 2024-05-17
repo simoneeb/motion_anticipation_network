@@ -43,7 +43,7 @@ def normalize01(x):
 
 
 
-cell_nb = 125                         # cell to fit 
+cell_nb = 431                         # cell to fit 
 model_name  = 'reciprocal_linear_long_no_tauB'   # model name 
 speeds = [0.14,0.42,0.7,0.98,1.96]       # speeds to simulate 
      
@@ -55,7 +55,7 @@ nb_repeats = 20            # number of repeats
 
 
 # get desired output 
-fp = '/Users/simone/Documents/Experiments/motion_anticipation/Simone/small_anticipation_dict.pickle'
+fp = '/Users/simoneebert/Documents/Experiments/motion_anticipation/Simone/small_anticipation_dict.pickle'
 with open(fp, 'rb') as handle:
     small_dict = pickle.load(handle)
 

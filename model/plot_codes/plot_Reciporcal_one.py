@@ -22,11 +22,14 @@ from utils import gaussian, GainF, DOG
 fp = sys.argv[1]
 param = sys.argv[2]
 val = sys.argv[3]
-stim_name = sys.argv[4]
+if sys.argv[4] != "None":
+    stim_name = sys.argv[4]
+    fp1 = f'{fp}/{param}_{val}/{stim_name}'
+else:
+    fp1 = f'{fp}/{param}_{val}'
 
 label2 = f'{param} = {val}'
 
-fp1 = f'{fp}/{param}_{val}/{stim_name}'
 save = True
 #print(fp)
 

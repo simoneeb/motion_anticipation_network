@@ -23,8 +23,13 @@ def run_Reciporcal(params, filepath = None, save_one = False, measure_n = False,
     """
 
     if filepath is not None:
-        with open(f'{filepath}/params', 'rb') as handle:
-            params = pickle.load(handle)
+
+        if not os.path.isdir(filepath):
+            os.makedirs(filepath)
+        if not os.path.isdir(f'{filepath}/plots'):
+            os.makedirs(f'{filepath}/plots')
+    #     with open(f'{filepath}/params', 'rb') as handle:
+    #         params = pickle.load(handle)
 
     
 
@@ -43,9 +48,11 @@ def run_Reciporcal(params, filepath = None, save_one = False, measure_n = False,
 
     if stim_type == 'interrupted':
         bar = stimulus_maker.bar_interrupted()
-    
 
-    _ = stimulus_maker.load_filter()
+    if stim_type == 'impulse':
+        bar = stimulus_maker.impulse_stimulus()
+
+    #_ = stimulus_maker.load_filter()
     tkern = stimulus_maker.filter_biphasic_norm()
 
     _,inp = stimulus_maker.OPL()                        # simulate OPS response
@@ -53,7 +60,7 @@ def run_Reciporcal(params, filepath = None, save_one = False, measure_n = False,
  
     if filepath is not None:
         stimulus_maker.plot_stim()                      
-        stimulus_maker.plot_kernels()
+        #stimulus_maker.plot_kernels()
 
 
     params = stimulus_maker.add_params()                # add additional params
@@ -268,4 +275,4 @@ def run_Reciporcal(params, filepath = None, save_one = False, measure_n = False,
     if measure_n is True:
         return [max_RG,max_RB,max_drive,params['tps_rf_GC_mid'][middle_cell_GC], onset_RG,onset_RB,RG[middle_cell_GC,:],RB[middle_cell_GC,:],nmin_B,nmin_A]
     else:
-        return [max_RG,max_RB,max_drive,params['tps_rf_GC_mid'][middle_cell_GC], onset_RG,onset_RB,RG[middle_cell_GC,:],RB[middle_cell_GC,:]]
+        return [max_RG,max_RB,max_drive,params['tps_rf_GC_mid'][middle_cell_GC], onset_RG,onset_RB,RG[middle_cell_GC,:],RB[middle_cell_GC,:],VG[middle_cell_GC,:]]

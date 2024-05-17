@@ -57,13 +57,13 @@ def measure_response_onset_index(resp):
  
     return idx_start
 
-cell_nb = 125                                       # cell to fit 
-model_name  = 'reciprocal_linear_long_no_tauB'      # model name 
+cell_nb = 431                                      # cell to fit 
+model_name  = 'reciprocal_ff'      # model name 
 speeds = [0.14,0.42,0.7,0.98,1.96]                  # speeds to simulate 
      
 
 # get desired output 
-fp = '/Users/simone/Documents/Experiments/motion_anticipation/Simone/small_anticipation_dict.pickle'
+fp = '/Users/simoneebert/Documents/Experiments/motion_anticipation/Simone/small_anticipation_dict.pickle'
 with open(fp, 'rb') as handle:
     small_dict = pickle.load(handle)
 
@@ -93,8 +93,8 @@ dt_exp = 0.025
 
 
 
-# # define parameter to be fitted 
-paramis = ['wBA','wAB','tauB','tauA']
+# define parameter to be fitted 
+paramis = ['wBA','wAB','wGA','tauA', 'tauB']
 
 # # give initial conditions
 # paramis_init = np.array([4,8,1,2])
@@ -103,8 +103,8 @@ paramis = ['wBA','wAB','tauB','tauA']
 
 
 # load best params 
-fpout = f'/Users/simone/Documents/Simulations/motion_anticipation_network/{model_name}_fitted_cell_{cell_nb}'
-with open(f'{fpout}/params_fitted_cell_{cell_nb}', 'rb') as handle:
+fpout = f'/Users/simoneebert/Documents/Simulations/motion_anticipation_network/{model_name}_fitted_cell_{cell_nb}'
+with open(f'{fpout}/params', 'rb') as handle:
     params_best = pickle.load(handle)
 
 # load initial params
@@ -146,9 +146,9 @@ sim_LEatRFs = []
 for i,speed in enumerate(speeds): 
     print(f'speed: {speed}')
     # stim_name = f'smooth_{speed}'
-    params = modify_params(params_best,['speed'], [speed])                                           # set speed
+    params = modify_params(params_best,['speed','dt'], [speed,dt])                                           # set speed
     params_init = modify_params(params_init,['speed'], [speed])                                     # set speed
-    simu = run_Reciporcal(params = params, filepath = None, save_one = True,stim_type='smooth')    # run simulation best
+    simu = run_Reciporcal(params = params, filepath = None, save_one = True, stim_type='smooth')    # run simulation best
     simu_init = run_Reciporcal(params = params_init, filepath = None, save_one = True,stim_type='smooth')   # run simulation init 
 
     res = small_dict[cell_nb]['centered_bar_responses'][speed]         # experimental response centered arout time point where bar center is at RF cetner
@@ -172,9 +172,9 @@ for i,speed in enumerate(speeds):
 
     tp_rf_crossing = np.round(simu[3],2)                               # time of bar center at rf center
     idx_rf_crossing = int(tp_rf_crossing/dt)                           # convert to index
-    pred = simu[-2]                                                    # predicted response 
+    pred = simu[-3]                                                    # predicted response 
     pred =  pred[idx_rf_crossing - tps_half:idx_rf_crossing+tps_half]  # cernter around bar crossing and crop to length of experimental response
-    pred_init = simu_init[-2]                                                    # predicted response 
+    pred_init = simu_init[-3]                                                    # predicted response 
     pred_init =  pred_init[idx_rf_crossing - tps_half:idx_rf_crossing+tps_half]  # cernter around bar crossing and crop to length of experimental response
 
 
@@ -192,7 +192,6 @@ for i,speed in enumerate(speeds):
     # seuil = np.mean(res_dt[:int(tps_res*0.2)]) +1*np.std(res_dt[:int(tps_res*0.2)])
     # idx_onset = np.nonzero(res_dt>seuil)[0][0]
     idx_onset = measure_response_onset_index(res_dt)
-
     seuil = np.mean(pred[:int(tps_res*0.2)])+1*np.std(pred[:int(tps_res*0.2)])
     idx_sim_onset =  np.nonzero(pred>0.01)[0][0]
     seuil = np.mean(pred_init[:int(tps_res*0.2)])+1*np.std(pred_init[:int(tps_res*0.2)])
@@ -388,5 +387,5 @@ ax.set_title('Simulated responses in space')
 ax.set_xlim(-800,800)
 
 fig_res.suptitle(f' {model_name} model fit to cell {cell_nb}')
-fig_res.savefig(f'{fpout}/fit_RES.png')
+fig_res.savefig(f'{fpout}/fit_RES_2.png')
 plt.close()

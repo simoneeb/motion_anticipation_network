@@ -43,15 +43,15 @@ def normalize01(x):
 
 
 
-cell_nb = 125                            # cell to fit 
+cell_nb = 125                           # cell to fit 
 model_name  = 'reciprocal_ff'   # model name 
-speeds = [0.14,0.42,0.7,0.98,1.96]       # speeds to simulate 
+#speeds = [0.14,0.42,0.7,0.98,1.96]       # speeds to simulate 
      
 
 # hyperparameter for optimization
 sigma0 = 2                 # STD for parameter draw
 popsize = 15               # number of parametersets for each draw 
-nb_repeats = 20            # number of repeats 
+nb_repeats = 20           # number of repeats 
 
 
 # get desired output 
@@ -94,11 +94,16 @@ dt = 0.01        # define timestep
 dt_exp = 0.025   # set timestep of experimentls 
 params = modify_params(params,['std_GC,dt'],[std_GC,dt])   # change parameter 
 
-paramis = ['tauA','wBA','wGA','tauG']  # define parameter to be fitted 
+
+params = modify_params(params,['wBA','wAB','wGA'],[1.,1.,0.01])   # change parameter 
+
+
+
+paramis = ['tauB','tauA','tauG']  # define parameter to be fitted 
 #paramis = ['wBA','wAB','wGA']  # define parameter to be fitted 
-paramis_init = np.array([1,2,1,1])     # give initial conditions, all need to be in the same oder of maginude
+paramis_init = np.array([1,2,1])     # give initial conditions, all need to be in the same oder of maginude
 #paramis_init = np.array([2,2,1])     # give initial conditions, all need to be in the same oder of maginude
-scales = np.array([5,10,-0.01,0.1])       # define scales for params
+scales = np.array([0.1,0.1,0.1])       # define scales for params
 #scales = np.array([1,1,-0.001])       # define scales for params
 #x0 = np.log(paramis_init)             # set inital conditions as log to avoid negative values 
 x0 = paramis_init                      # set inital conditions as log to avoid negative values 
@@ -106,7 +111,7 @@ x0 = paramis_init                      # set inital conditions as log to avoid n
 
 # generate network input 
 stimulus_maker = stim_moving_object_for_2D_net(params, filepath = None)  # create stimulus
-bar = stimulus_maker.bar_smooth()                # make bar
+bar = stimulus_maker.impulse_stimulus()                # make bar
 
 #_ = stimulus_maker.load_filter()                 # set filter param from data 
 tkern = stimulus_maker.filter_biphasic_norm()    # generate filter 
@@ -120,45 +125,27 @@ inp = stimulus_maker.F()                         # simulate input to dynamical s
 def run_one_pset(pset):
 
     #pset = np.exp(pset) *scales                                            # create parameter values 
-    pset = pset *scales 
-    tauA =  1/(pset[-4] + (1/params['tauB']))                                          # create parameter values 
-    wBA = pset[-3]/params['wAB']
-    wGA = pset[-2]
-    tauG = pset[-1]
-    psetvals = [tauA,wBA,wGA,tauG]
-    paramss = modify_params(params,paramis,psetvals)                           # modify params 
+    pset = pset *scales                                            # create parameter values 
+    paramss = modify_params(params,paramis,pset)                           # modify params 
     # TODO error temporal STA profile
 
     err_over_speeds = []
-    for speed in speeds:                                                   # loop over speeds 
 
-        paramss = modify_params(paramss,['speed'], [speed])                # modify speed in params
-        simu = run_Reciporcal(paramss)                                     # run simulation 
+    simu = run_Reciporcal(paramss, stim_type = 'impulse')                                     # run simulation 
 
-        res = small_dict[cell_nb]['centered_bar_responses'][speed]         # experimental response centered arout time point where bar center is at RF cetner
-        res_time = np.arange(0,len(res))*dt_exp                            # corresponding time with dt = bin_bize, but starting at 0  
-        #res_time = small_dict['times'][speed]
-        resfun = interp1d(res_time,res, fill_value='extrapolate')          # interpolation of response
-        time_dt = np.arange(0,res_time[-1],params['dt'])                   # new time with dt of simulation 
-        res_dt = resfun(time_dt)                                           # new response 
+    res = small_dict[cell_nb]['rft']         # experimental response centered arout time point where bar center is at RF cetner
+    res_time = np.arange(0,len(res))*dt_exp                            # corresponding time with dt = bin_bize, but starting at 0  
+    #res_time = small_dict['times'][speed]
+    resfun = interp1d(res_time,res, fill_value='extrapolate')          # interpolation of response
+    time_dt = np.arange(0,res_time[-1],params['dt'])                   # new time with dt of simulation 
+    res_dt = resfun(time_dt)                                           # new response 
 
-        tps_res = len(res_dt)                                              # get length of res_dt
-        tps_half = int(np.floor(tps_res/2))                                # get middle point 
+    pred = simu[-1]                                                    # predicted response 
 
-        if tps_res%2 != 0:                                                 # check if even numner of timesteps 
-            print('!!! uneven numner of timepoints, RF middle crossing is inaccurate')
-
-        tp_rf_crossing = np.round(simu[3],2)                               # time of bar center at rf center
-        idx_rf_crossing = int(tp_rf_crossing/dt)                           # convert to index
-        pred = simu[-2]                                                    # predicted response 
-        pred =  pred[idx_rf_crossing - tps_half:idx_rf_crossing+tps_half]  # cernter around bar crossing and crop to length of experimental response
-
-        res_dt = normalize01(res_dt)                 
-        pred = normalize01(pred)
-        err = compute_mse(res_dt,pred)
-        err_over_speeds.append(err)
-        
-    err = np.mean(err_over_speeds)
+    res_dt = normalize01(res_dt)                 
+    pred = normalize01(pred)
+    err = compute_mse(res_dt,pred)
+    
 
     # if any(pset) <= 0:
     #     err = err + 1
@@ -200,7 +187,7 @@ for n in range(nb_repeats):                                                     
 
 
 # create output directory
-fpout = f'/Users/simoneebert/Documents/Simulations/motion_anticipation_network/{model_name}_fitted_cell_{cell_nb}'
+fpout = f'/Users/simoneebert/Documents/Simulations/motion_anticipation_network/{model_name}_fitted_STA_cell_{cell_nb}'
 if not os.path.isdir(fpout):
     os.mkdir(fpout)
 

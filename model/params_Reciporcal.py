@@ -59,7 +59,7 @@ def make_params(param_names = None, param_vals = None, filepath = None):
 
     d = 1
     wGB = .0400
-    wGA = 0.0
+    wGA = -0.004
     wGA2 = 0.0
 
     rectification_BC = True
@@ -261,3 +261,10 @@ def modify_params(params, param_names,values):
     return params
 
 
+def load_params(filepath,params_name):
+
+
+    with open(f'{filepath}/{params_name}', 'rb') as handle:
+        params = pickle.load(handle)
+        
+    return params

@@ -197,6 +197,22 @@ class stim_moving_object_for_2D_net(object):
 
 
         return self.barstim
+    
+    #make impulse stimulus
+    def impulse_stimulus(self,length = .48,impulse_timepoint = 0, amplitude = 1):
+
+
+        self.tps = int(length/self.dt)
+        self.barstim = np.zeros((self.nb_cells,self.tps))
+
+        impulse_idx = int(impulse_timepoint/self.dt)
+        self.barstim[:,impulse_idx] = amplitude
+
+        #timeline = np.arange(0,length,self.dt)
+
+        return self.barstim
+
+
 
 
     def bar_interrupted(self):
@@ -346,7 +362,7 @@ class stim_moving_object_for_2D_net(object):
         self.params['roh'] = self.roh
         self.params['pos_rf_mid'] = self.pos_rf_mid
         self.params['tps_rf_mid'] = self.tps_rf_mid
-
+        self.params['tps'] = self.tps
         if self.stop_pos is not None: 
 
             self.params['stop_t'] = self.stop_t
