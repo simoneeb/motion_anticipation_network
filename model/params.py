@@ -18,10 +18,10 @@ if not os.path.isdir(f'{filepath}/plots'):
 
 # define parameter
 
-nb_cells = 600#600
-nb_GC_cells = 600#300
+nb_cells = 300#600
+nb_GC_cells = 300#300
 
-rf_GC = 0.085*6 # 0.09s
+rf_GC =0.065*6# 0.085*6 # 0.09s
 rf_GC_s = 0.485*6 # 0.09s
 rf_BC = 0.05*6 # 0.09s
 rf_BC_s = 0.20*6 # 0.09s
@@ -37,50 +37,50 @@ dt = 0.0001
 stimulus_polarity = 1
 stop = None
 #stop = 2 #mm
-w_BC = 0.3 # 0.5
+w_BC = 1.#0.#0.3 # 0.5
 w_GC = 0.0 # 0.5
 
-tauA = 0.1 #0.017
+tauA = 0.28 #0.1 #0.017
 tauA2 = 0.3 #0.017
-tauB = 0.01
+tauB = 0.08 # 0.01
 tauG = 0.01
 
 #0.03825167 0.1199695  0.37569818
-tauOPL = 0.044#0.05508089
-tauOPL2 = 0.045#0.05730816
+tauOPL = 0.04# 0.044#0.05508089
+tauOPL2 = 0.087#0.045#0.05730816
 SF = 1.
 
-wAB = 0.
-wBA = 0.
+wAB = 46. # 0.
+wBA = 46. # 0.
 wBA2 = 0.
 d = 1
-wGB = 1.0
+wGB =0.04 # 1.0
 wGA = 0.0
 wGA2 = 0.0
 
 rectification_BC = True
-rectification_AC = False
+rectification_AC = True
 
 slope_BC = 1
-threshold_BC = 5.35
+threshold_BC = 0.# 5.35
 
 
-slope_GC = 150#1110
+slope_GC =1110# 150#1110
 threshold_GC = 0.0
 
-krecB = 20.0
-krelB = 20.0
+krecB = 1.#20.0
+krelB = 0.5#20.0
 betaB = 0# 300.0 #1360.0
 
 
-krecA = 20.0
-krelA = 19.0
+krecA = 0.5#20.0
+krelA = 1.0#19.0
 betaA = 0#240.0 #1360.0
 
 X0 = 0
 
 tauActB = 0.1
-hB = 0.611  #611.0#
+hB =0.00# 0.611  #611.0#
 
 tauActA = 0.1
 hA = 0.0 #10110.0 #10000.1

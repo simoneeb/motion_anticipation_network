@@ -5,7 +5,6 @@ import numpy as np
 class system(object):
 
 
-
     def __init__(self, 
              params,
              W_GG,
@@ -48,7 +47,6 @@ class system(object):
                      W_out,
                      rectification,
                      F):
-
 
 
         layer = {
@@ -109,7 +107,6 @@ class system(object):
 
 
 
-
             for l in range(nb_layers): # Gradient 
 
                 
@@ -128,14 +125,17 @@ class system(object):
                         self.Layers_IPL[l]['dX'][:,t-1] += np.dot(self.Layers_IPL[l]['W'][x],self.Layers_IPL[x]['X'][:,t-1]) 
                     
                     else :        # if other layer, add input scaled by plasticty and gain 
-                        self.Layers_IPL[l]['dX'][:,t-1] += np.dot(self.Layers_IPL[l]['W'][x],self.Layers_IPL[x]['X_rect'][:,t-1]) * self.Layers_IPL[x]['n'][:,t-1] * self.Layers_IPL[x]['G'][:,t-1]
-                        
+                        if self.plastic_to_A == 1:
+                            self.Layers_IPL[l]['dX'][:,t-1] += np.dot(self.Layers_IPL[l]['W'][x],self.Layers_IPL[x]['X_rect'][:,t-1]) * self.Layers_IPL[x]['n'][:,t-1] * self.Layers_IPL[x]['G'][:,t-1]
+                        else:
+                            self.Layers_IPL[l]['dX'][:,t-1] += np.dot(self.Layers_IPL[l]['W'][x],self.Layers_IPL[x]['X_rect'][:,t-1]) * self.Layers_IPL[x]['G'][:,t-1]
+
+
                 # update state vector at time t
                 self.Layers_IPL[l]['n'][:,t] =  self.Layers_IPL[l]['n'][:,t-1]+ self.Layers_IPL[l]['dn'][:,t-1]*self.dt
                 self.Layers_IPL[l]['X'][:,t] =  self.Layers_IPL[l]['X'][:,t-1]+ self.Layers_IPL[l]['dX'][:,t-1]*self.dt
                 self.Layers_IPL[l]['A'][:,t] =  self.Layers_IPL[l]['A'][:,t-1]+ self.Layers_IPL[l]['dA'][:,t-1]*self.dt
         
-
     
 
     def solve_GC(self,N, rectification = False):
@@ -166,7 +166,12 @@ class system(object):
 
 
             for layer in self.Layers_IPL:
-                dG[:,t-1] +=  np.dot(layer['W_out'],layer['X_rect'][:,t-1]*layer['G'][:,t-1]).flatten()
+                if self.plastic_to_G == 1:
+                    dG[:,t-1] +=  np.dot(layer['W_out'],layer['X_rect'][:,t-1]*layer['G'][:,t-1]*layer['n'][:,t-1]).flatten()
+                else : 
+                    dG[:,t-1] +=  np.dot(layer['W_out'],layer['X_rect'][:,t-1]*layer['G'][:,t-1]).flatten()
+                
+                # in each layer add variable to control plastic to G 
 
             self.G[:,t] = self.G[:,t-1]+ dG[:,t-1]*self.dt
             self.AG[:,t] = self.AG[:,t-1]+ dAG[:,t-1]*self.dt
@@ -181,7 +186,6 @@ class system(object):
         self.RG = np.array([np.array([self.G_rect[i,t]*self.GG[i,t] for t,x in enumerate(gi)]) for i,gi in enumerate(self.G)])
 
         return self.RG, self.GG
-
 
 
 

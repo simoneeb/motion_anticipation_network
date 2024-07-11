@@ -12,8 +12,8 @@ def make_params(param_names = None, param_vals = None, filepath = None):
 
 
     # define parameter
-    nb_cells = 450
-    nb_GC_cells = 450
+    nb_cells = 300#450
+    nb_GC_cells = 300# 450
     saving_range = 50
     rf_GC = 0.065*6 # 0.09s
     rf_GC_s = 0.485*6 # 0.09s
@@ -24,11 +24,11 @@ def make_params(param_names = None, param_vals = None, filepath = None):
     std_GC_s = rf_GC_s/6
 
     spacing = 0.005  
-    dt = 0.01#1/40# 0.001
+    dt = 0.001#1/40# 0.001
 
 
     speed = 0.81 
-    bar_width = 0.150 
+    bar_width =0.160#  0.150 
     stimulus_polarity = 1
     stop = None
     start_cell = 150#-16
@@ -36,7 +36,7 @@ def make_params(param_names = None, param_vals = None, filepath = None):
     occluder_width = 2*std_GC#s
 
     #stop = 2 #mm
-    w_BC = 0.4 # 0.5
+    w_BC = 0.4 # 0.5 ??????????
     w_GC = 0.0 # 0.5
 
     tauA = 0.28#0.156 #0.218 #= RAM mono linear fitted to ACM   # RAM fitted to ACM  = 0.156  
@@ -47,10 +47,10 @@ def make_params(param_names = None, param_vals = None, filepath = None):
     tauOPL = 0.04 #0.086   #0.05508089
     tauOPL2 = 0.0876 #0.05730816
     SF =0.# 1.
-    input_scale =0.1#0.1 #5.#0.1#0.025#5# 800#459#800
+    input_scale =0.1 #0.1 #5.#0.1#0.025#5# 800#459#800
 
     wAB = 46.#22.   # 10.#44. #= RAM mono linear fitted to ACM   # RAM fitted to ACM = 22
-    wBA = 46.# 31.#31. #= RAM mono linear fitted to ACM   # RAM fitted to ACM = 31
+    wBA = 46.#46. # 46.# 31.#31. #= RAM mono linear fitted to ACM   # RAM fitted to ACM = 31
 
     wA2B = 0.#46.
     wA2A = 0. #46.0
@@ -59,11 +59,11 @@ def make_params(param_names = None, param_vals = None, filepath = None):
 
     d = 1
     wGB = .0400
-    wGA = -0.004
+    wGA = 0.#-0.0015
     wGA2 = 0.0
 
-    rectification_BC = True
-    rectification_AC = True
+    rectification_BC = False
+    rectification_AC = False
     rectification_n = True
 
     slope_BC = 1
@@ -76,8 +76,8 @@ def make_params(param_names = None, param_vals = None, filepath = None):
     slope_n = 1
     threshold_n = 0.0
 
-    plastic_to_G = False
-    plastic_to_A = False
+    plastic_to_G = 1
+    plastic_to_A = 0
     krecB = 1.  #0.78# 2.0
     krelB = .5  #0.64# 2.0
     betaB =0.0  #0.6 #0.5#0.1  #0.3#.1#3#0.1#.30 #1360.0
@@ -188,6 +188,8 @@ def make_params(param_names = None, param_vals = None, filepath = None):
                 'tauActG' : tauActG,
                 'hG' : hG
     }
+
+    
     if param_names is not None:
         for i,nam in enumerate(param_names):
             params[nam] = param_vals[i]

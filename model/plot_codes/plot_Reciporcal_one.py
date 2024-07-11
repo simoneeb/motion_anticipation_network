@@ -253,5 +253,4 @@ for i,c in enumerate(BC_cells_short):
 #ax[0.show()
 if save == True :
     fig.savefig(f'{fp1}/plots/AC_processing_{stim_name}.png')
-
 plt.close()

@@ -139,7 +139,7 @@ class connectivity(object):
 
         #TODO add labels 
 
-        fig.savefig(f'{self.filepath}/weights_IPL.png')
+        fig.savefig(f'{self.filepath}/plots/weights_IPL.png')
 
 
 
@@ -155,7 +155,7 @@ class connectivity(object):
 
         #TODO add labels 
 
-        fig.savefig(f'{self.filepath}/weights_pooling.png')
+        fig.savefig(f'{self.filepath}/plots/weights_pooling.png')
 
 
 

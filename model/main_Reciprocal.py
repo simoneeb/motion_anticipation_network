@@ -3,17 +3,21 @@ import numpy as np
 import time
 import matplotlib.pyplot as plt
 from run_Reciporcal import run_Reciporcal
-from params_Reciporcal import load_params, modify_params
+from params_Reciporcal import load_params, modify_params, make_params
 import pickle
-
-
+import sys as syt
 
 '''
 script to loop over values for one parameter and simulate  model respons eto different speeds
 '''
 
 
-net_name = f'reciprocal_ff_fitted_STA_cell_125'
+net_name = f'fb_ff_thesis_linear'
+
+
+
+
+# Simulate response to impule to show model STA
 stim_type = 'impulse'
 
 
@@ -23,13 +27,14 @@ stim_name = stim_type
 params_name = 'params'
 filepath = f'/Users/simoneebert/Documents/Simulations/motion_anticipation_network/{net_name}'
 
-params = load_params(filepath,params_name)
+params = make_params(filepath = filepath)
+#params = load_params(filepath,params_name)
 params = modify_params(params, param_names= ['dt'], values=[0.001])
 # load params
 # if not os.path.isdir(f'{filepath}/impulse'):
 #     os.makedirs(f'{filepath}/impulse')
-ant_space = run_Reciporcal(params = params, filepath =f'{filepath}', save_one = True,stim_type=stim_type)  
-
+ant_space = run_Reciporcal(params = params, filepath =f'{filepath}', save_one = True, stim_type=stim_type)  
+print(params['saving_range'])
 
 with open(f'{filepath}/out', 'rb') as handle:
     out = pickle.load(handle)
@@ -43,8 +48,8 @@ ax.plot(time,out['VA'][0], label = 'VA')
 
 ax = fig.add_subplot(212)
 ax.plot(time,out['VG'], label = 'VG')
-
-fig.savefig(f'{filepath}/STA_fit.png')
+fig.legend()
+fig.savefig(f'{filepath}/plots/STA_fit.svg', format = 'svg')
 
 x = 0 
 
@@ -52,22 +57,23 @@ x = 0
 #plot response
 
 
-# # use for moving bar simulation
-stim_type = 'smooth'
-speeds = [0.14,0.42,0.7,0.98,1.96]
+# stim_type = 'smooth'
+# #speeds = [0.14,0.42,0.7,0.98,1.96]
+# speeds = [0.1,0.2,0.3,0.4,0.4,0.5,0.6,0.7,0.8,0.9,1.0,2.0]
 
-times = []
-resps = []
-ants = []
+# times = []
+# resps = []
+# ants = []
 
-for si in speeds:
-    stim_name = f'{stim_type}_{si}'
-    filepath = f'/Users/simoneebert/Documents/Simulations/motion_anticipation_network/{net_name}/bar'
-    params = modify_params(params, param_names = ['speed'], values=[si])
-    ant_space = run_Reciporcal(params = params, filepath =f'{filepath}/{params_name}/{stim_name}', save_one = True,stim_type=stim_type)  
+# for si in speeds:
+#     stim_name = f'{stim_type}_{si}'
+#     filepath = f'/Users/simoneebert/Documents/Simulations/motion_anticipation_network/{net_name}/bar'
+#     params = modify_params(params, param_names = ['speed'], values=[si])
+#     ant_space = run_Reciporcal(params = params, filepath =f'{filepath}/{params_name}/{stim_name}', save_one = True,stim_type=stim_type)  
 
-os.system(f'python plot_codes/plot_speeds_auto_one.py {filepath} {stim_type} {'params'} {None}')
-    
+# os.system(f'python plot_codes/plot_speeds_auto_one.py {filepath} {stim_type} {'params'} {None}')
+
+# TODO fix save path
 # stop = time.time()
 
 # print('Elapsed time for the entire processing: {:.2f} s'

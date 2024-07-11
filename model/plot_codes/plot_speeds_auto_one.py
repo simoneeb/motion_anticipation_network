@@ -6,16 +6,15 @@ import sys
 import os
 
 
-
 # define what to compare
 save = True
 unit = 'space'
 #speeds = np.flip([5.0,4.5,4.0,3.5,3.0,2.9,2.8,2.7,2.6])
 speeds = [0.14,0.42,0.7,0.98,1.96]
+speeds = [0.1,0.2,0.3,0.4,0.4,0.5,0.6,0.7,0.8,0.9,1.0,2.0]
+
 #speeds = [0.14,0.7,1.96]
-
 #speeds = [1.0]
-
 
 filepath = sys.argv[1]
 stim_type = sys.argv[2]
@@ -25,8 +24,6 @@ par = f'{param}_{val}'
 
 
 # load params
-
-
 fig = plt.figure(figsize=(20,16))
 
 fig.subplots_adjust(hspace=1.2)
@@ -37,7 +34,6 @@ label.tick_params(axis = 'y', colors = 'white')
 label.set_xticks([])
 
 ax2 = fig.add_subplot(gs[:,1])
-
 
 antis = []
 cmap = plt.get_cmap('viridis',len(speeds))
@@ -90,3 +86,4 @@ if not os.path.isdir(f'{filepath}/{param}/plots'):
 fig.savefig(f'{filepath}/{param}/plots/RG_speeds_{unit}_{par}.png')
 
 fig.savefig(f'{filepath}/{param}/{par}/RG_speeds_{unit}_{par}.png')
+plt.close()

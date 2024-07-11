@@ -119,7 +119,6 @@ class stim_moving_object_for_2D_net(object):
         return self.temporal_kernel
     
 
-
     def load_filter(self):
 
         fp = '/Users/simone/Documents/Simulations/chen_2013/chen_2013_fast_OFF_filter.csv'
@@ -199,7 +198,7 @@ class stim_moving_object_for_2D_net(object):
         return self.barstim
     
     #make impulse stimulus
-    def impulse_stimulus(self,length = .48,impulse_timepoint = 0, amplitude = 1):
+    def impulse_stimulus(self,length = 1.,impulse_timepoint = 0, amplitude = 1):
 
 
         self.tps = int(length/self.dt)

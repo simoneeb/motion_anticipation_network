@@ -26,7 +26,7 @@ par = f'{param}_{val}'
 
 # load params
 
-CELL_GC = 300
+CELL_GC =2# 300
 
 fig = plt.figure(figsize=(20,16))
 

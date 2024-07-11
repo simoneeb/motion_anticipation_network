@@ -7,31 +7,27 @@ from params_Reciporcal import make_params
 import time
 import pandas as pd
 import pickle
+import sys
+
+
 from utils import measure_onset_anticipation
 
-# def measure_onset_anticipation(sim):
 
-#     onset_sim =np.argmax(sim >=1)
-#     #onset_ref =np.argmax(ref >=1)
 
-#     return onset_sim
-#     #return onset_ref - onset_sim
-
-net_name = f'Reciporcal_mono_linear_heavy_maxan_equalweight/noGCGainControl'
+net_name = f'fb_thesis_linear'
 
 stim_type = 'smooth'
 
-#loop over parameter
 
-vals1 = np.linspace(0.01,0.31,20)
-vals2 = np.linspace(1,101,20)
-# vals2 =[0.01,0.3]
-# vals1 =[1,10]
-speeds = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,1.0]
+# loop over parameter
+n_params = 10
+vals2= np.linspace(0.01,0.31,n_params)
+
+speeds = [0.2,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.8]
 #speeds = [0.1,0.4,0.7,1.0,2.0]
 
 # speeds = [0.5,0.8]
-nb_jobs = len(vals1)*len(vals2)*len(speeds)
+nb_jobs = len(vals2)*len(speeds)
 dur = (nb_jobs*11.5)/60
 print(f'nb jobs :  {nb_jobs}, takes {dur} mins')
 
@@ -39,62 +35,63 @@ print(f'nb jobs :  {nb_jobs}, takes {dur} mins')
 
 refdict = {}
 
-for si in speeds:
-    fp = f'/user/sebert/home/Documents/Simulations/motion/anticipation_1D/Reciporcal/{net_name}/wBA/wBA_0.0/smooth_{si}'
+# for si in speeds:
+#     fp = f'/Users/simoneebert/Documents/Simulations/motion_anticipation_network/Loops/{net_name}/wAB/wAB_0.0/smooth_{si}'
+#     #fp = f'/Users/simoneebert/Documents/Simulations/motion_anticipation_network/Loops/{net_name}/wGA/wGA_0.0/smooth_{si}'
 
-    with open(f'{fp}/out', 'rb') as handle:
-        out = pickle.load(handle)
-    with open(f'{fp}/params', 'rb') as handle:
-        params = pickle.load(handle)
+#     with open(f'{fp}/out', 'rb') as handle:
+#         out = pickle.load(handle)
+#     with open(f'{fp}/params', 'rb') as handle:
+#         params = pickle.load(handle)
 
-    dt = params['dt']
+#     dt = params['dt']
 
-    refdict[f'{si}'] = {}
-    refdict[f'{si}']['RG'] = out['RG']
-    refdict[f'{si}']['RB'] = out['RB'][50]
-    refdict[f'{si}']['max_tp_RG'] = np.argmax(out['RG'])*dt
-    refdict[f'{si}']['max_tp_RB'] = np.argmax(out['RB'][50])*dt
+#     refdict[f'{si}'] = {}
+#     refdict[f'{si}']['RG'] = out['RG']
+#     refdict[f'{si}']['RB'] = out['RB'][50]
+#     refdict[f'{si}']['max_tp_RG'] = np.argmax(out['RG'])*dt
+#     refdict[f'{si}']['max_tp_RB'] = np.argmax(out['RB'][50])*dt
 
-df = pd.DataFrame(columns=['wBA', 'wAB', 'tauA', 'tauB','mu', 'speed', 'peak_RG','peak_RB', 'peak_drive', 'tp_rf_GC_mid', 'peak_RG_pooling', 'peak_RB_pooling', 'onset_RB', 'onset_RG'])
+df = pd.DataFrame(columns=['wTOT','tauTOT','wBA', 'wAB', 'tauA', 'tauB','mu', 'speed', 'peak_RG','peak_RB', 'peak_drive', 'tp_rf_GC_mid', 'peak_RG_pooling', 'peak_RB_pooling', 'onset_RB', 'onset_RG'])
 # df = pd.DataFrame(columns=['wAB','wBA', 'speed', 'ant_space', 'ant_time', 'ant_space_drive', 'ant_time_drive', 'onset_shift'])
 dfresRG = pd.DataFrame()
 dfresRB = pd.DataFrame()
-grid = np.array(np.meshgrid(vals1,vals2,speeds)).T.reshape(-1,3)
+grid = np.array(np.meshgrid(vals2,speeds)).T.reshape(-1,2)
 
 
+#TODO add output to dataframe durinng the parallel run to avoid blocking memory
+def run(val2,si):
 
-def run(val1,val2,si):
-
+    params = make_params(['speed'],[si])
+    params['wBA'] = 46.0
+    params['wAB'] = 46.0
+    params['wGA'] = 0.0
     
-
-  
-    params = make_params()
-
-    tauB = params['tauB']
-    wAB = params['wAB']
+    wBA=  params['wBA']
+    tauB =  params['tauB']
+    wAB=  params['wAB']
+    wGA=  params['wGA']
 
     # tauTOT = np.round(val1,2)
     # wTOT = np.round(val2,2)
-    
-    # tauA = 1/(tauTOT + 1/tauB)
+    tauA = np.round(val2,2)
+
+    tauTOT = 1/tauA - 1/tauB
     # wBA = wTOT/wAB
 
-    tauA = np.round(val1,2)
-    wBA = np.round(val2,2)
     
-    tauTOT = 1/tauA - 1/tauB
     wTOT = wBA*wAB
 
 
 
-
-    mu = wTOT*(tauTOT**2)
-
     # print(tauA)
     # print(wBA)
-    params = make_params(param_names = ['speed','wBA','tauA'], param_vals=[si,wBA,tauA])
+    params['tauA'] = tauA
+    #params = make_params(param_names = ['speed','wAB'], param_vals=[si,wAB])
 
-    [peak_RG,peak_RB,peak_drive,tp_rf_GC_mid,onset_RG,onset_RB,RG,RB] = run_Reciporcal(params = params)   
+    [peak_RG,peak_RB,peak_drive,tp_rf_GC_mid,onset_RG,onset_RB,RG,RB,VG] = run_Reciporcal(params = params)   
+
+
     # [ant_space,ant_time,ant_space_drive,ant_time_drive,RG] = run_Reciporcal(params = params)   
     # onset_RG = measure_onset_anticipation(RG)
     # onset_RB = measure_onset_anticipation(RB)
@@ -104,13 +101,11 @@ def run(val1,val2,si):
     RG = RG[0::10]
     RB = RB[0::10]
 
-    data = {'wAB': params['wAB'],
-            'tauB': params['tauB'],
-            'tauTOT': tauTOT,
-            'wTOT': wTOT,
+    data = {'wAB': wAB,
             'tauA': tauA,
+            'tauTOT': tauTOT,
             'wBA': wBA,
-            'mu': mu,
+            'wGA': wGA,
             'speed' : si,
             'peak_RG' : peak_RG,
             'peak_RB' : peak_RB,
@@ -124,27 +119,29 @@ def run(val1,val2,si):
     
   
     
-    return [data,RG,RB,params]
+    return [data,RG,RB]
 
 
 
 start = time.time()
 
-X = Parallel(n_jobs = 6, verbose=10)(delayed(run)(i[0],i[1],i[2]) for i in grid)
+X = Parallel(n_jobs = 4, verbose=10)(delayed(run)(i[0],i[1]) for i in grid)
+
+print(sys.getsizeof(X))
 
 for i,xi in enumerate(X):
     data = xi[0]
     speed = data['speed']
-    data['peak_RG_pooling'] =  refdict[f'{speed}']['max_tp_RG']
-    data['peak_RB_pooling'] =  refdict[f'{speed}']['max_tp_RB']
+    # data['peak_RG_pooling'] =  refdict[f'{speed}']['max_tp_RG']
+    # data['peak_RB_pooling'] =  refdict[f'{speed}']['max_tp_RB']
 
-    data['onset_RG_pooling'] =  measure_onset_anticipation(refdict[f'{speed}']['RG'])
-    data['onset_RB_pooling'] =  measure_onset_anticipation(refdict[f'{speed}']['RB'])
+    # data['onset_RG_pooling'] =  measure_onset_anticipation(refdict[f'{speed}']['RG'])
+    # data['onset_RB_pooling'] =  measure_onset_anticipation(refdict[f'{speed}']['RB'])
 
-    df = df.append(data, ignore_index = True)
+    df = df._append(data, ignore_index = True)
+    # data = pd.DataFrame(data)
+    # df = pd.concat([df,data], ignore_index = True, axis =1)
     
-
-
 
     RG = xi[1]
     RB = xi[2]
@@ -153,13 +150,18 @@ for i,xi in enumerate(X):
     dfresRG = pd.concat([dfresRG,dfnRG], ignore_index=True, axis=1)
     dfresRB = pd.concat([dfresRB,dfnRB], ignore_index=True, axis=1)
 
-df.to_csv(f'/user/sebert/home/Documents/Simulations/motion/anticipation_1D/Reciporcal/{net_name}/anticipation_data_mu3_long.csv')
-dfresRG.to_csv(f'/user/sebert/home/Documents/Simulations/motion/anticipation_1D/Reciporcal/{net_name}/responses_RG_mu3_long.csv')
-dfresRB.to_csv(f'/user/sebert/home/Documents/Simulations/motion/anticipation_1D/Reciporcal/{net_name}/responses_RB_mu3_long.csv')
+
+
+
+print(sys.getsizeof(df))
+
+df.to_csv(f'/Users/simoneebert/Documents/Simulations/motion_anticipation_network/{net_name}/anticipation_data_tauA.csv')
+dfresRG.to_csv(f'/Users/simoneebert/Documents/Simulations/motion_anticipation_network/{net_name}/responses_RG_tauA.csv')
+dfresRB.to_csv(f'/Users/simoneebert/Documents/Simulations/motion_anticipation_network/{net_name}/responses_RB_tauA.csv')
 
 stop = time.time()
 params = X[-1][-1]
-with open(f'/user/sebert/home/Documents/Simulations/motion/anticipation_1D/Reciporcal/{net_name}/params_grid_mu', 'wb') as handle:
+with open(f'/Users/simoneebert/Documents/Simulations/motion_anticipation_network/{net_name}/params_grid_tauA', 'wb') as handle:
             pickle.dump(params, handle)
 
 

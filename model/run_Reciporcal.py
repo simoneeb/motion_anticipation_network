@@ -7,14 +7,14 @@ from utils  import GainF_B,GainF_G, DOG,measure_onset_anticipation
 import matplotlib.pyplot as plt
 import os
 import numpy as np
-import pickle
+import pickle 
 import json
-import sys
+import sys as syt
 
 
 
 
-def run_Reciporcal(params, filepath = None, save_one = False, measure_n = False, stim_type = 'smooth'):
+def run_Reciporcal(params, filepath = None, save_one = True, measure_n = False, stim_type = 'smooth'):
     
     """
     function to run the simulation of a reciprocal amacrine network for a given parameterset
@@ -59,8 +59,8 @@ def run_Reciporcal(params, filepath = None, save_one = False, measure_n = False,
     F_inp = stimulus_maker.F()                          # Simulate in put into dynamical system
  
     if filepath is not None:
-        stimulus_maker.plot_stim()                      
-        #stimulus_maker.plot_kernels()
+        #stimulus_maker.plot_stim()                      
+        stimulus_maker.plot_kernels()
 
 
     params = stimulus_maker.add_params()                # add additional params
@@ -200,36 +200,14 @@ def run_Reciporcal(params, filepath = None, save_one = False, measure_n = False,
     params['ant_space'] =ant_space
 
 
-    out = {
-        'VB': VB,
-        'OB': OB,
-        'AB' : AB,
-        'NB' : NB,
-        'GB' : GB,
-        'RB' : RB,
-        'VA': VA,
-        'OA': OA,
-        'AA' : AA,
-        'NA' : NA,
-        'GA' : GA,
-        'RA' : RA,
-        'VG' : VG,
-        'AG': AG,
-        'GG': GG,
-        'NG': NG,
-        'RG' : RG,
-        'PVA': PVA,
-        'inp': inp,
-        'bar': bar,
-        'F':F_inp,
-            }
     # plot
 
     middle_cell_BC = int(params['nb_cells']/2)
     middle_cell_GC = int(params['nb_GC_cells']/2)
     ran = params['saving_range']
-    if save_one:
-        out = {'res' : Layers,
+    if save_one is True:
+        out = {
+            # 'res' : Layers,
             'VB': VB[middle_cell_BC-ran:middle_cell_BC+ran,:],
             'OB': OB[middle_cell_BC-ran:middle_cell_BC+ran,:],
             'AB' : AB[middle_cell_BC-ran:middle_cell_BC+ran,:],
@@ -247,10 +225,11 @@ def run_Reciporcal(params, filepath = None, save_one = False, measure_n = False,
             'GG': GG[middle_cell_GC,:],
             'NG': NG[middle_cell_GC,:],
             'RG' : RG[middle_cell_GC,:],
-            'PVA': PVA,
+            # 'PVA': PVA,
             'inp': inp[middle_cell_GC,:],
             'F':F_inp[middle_cell_GC,:],
                 }
+
         
     dt = params['dt']
     max_RG = np.argmax(RG[middle_cell_GC,:])*dt
