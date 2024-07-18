@@ -50,7 +50,7 @@ print(f'nb jobs :  {nb_jobs}, takes {dur} mins')
 refdict = {}
 
 # for si in speeds:
-#     fp = f'/Users/simoneebert/Documents/Simulations/motion_anticipation_network/Loops/{net_name}/wAB/wAB_0.0/smooth_{si}'
+#     fp = f'~/Documents/Simulations/motion_anticipation_network/Loops/{net_name}/wAB/wAB_0.0/smooth_{si}'
 
 #     with open(f'{fp}/out', 'rb') as handle:
 #         out = pickle.load(handle)
@@ -142,13 +142,13 @@ for i,xi in enumerate(X):
     dfresRB = pd.concat([dfresRB,dfnRB], ignore_index=True, axis=1)
 
 
-df.to_csv(f'/Users/simoneebert/Documents/Simulations/motion_anticipation_network/{net_name}/anticipation_data_tauNA_in.csv')
-dfresRG.to_csv(f'/Users/simoneebert/Documents/Simulations/motion_anticipation_network/{net_name}/responses_RG_tauNA_in.csv')
-dfresRB.to_csv(f'/Users/simoneebert/Documents/Simulations/motion_anticipation_network/{net_name}/responses_RB_tauNA_in.csv')
+df.to_csv(f'~/Documents/Simulations/motion_anticipation_network/{net_name}/anticipation_data_tauNA_in.csv')
+dfresRG.to_csv(f'~/Documents/Simulations/motion_anticipation_network/{net_name}/responses_RG_tauNA_in.csv')
+dfresRB.to_csv(f'~/Documents/Simulations/motion_anticipation_network/{net_name}/responses_RB_tauNA_in.csv')
 
 stop = time.time()
 params = X[-1][-1]
-with open(f'/Users/simoneebert/Documents/Simulations/motion_anticipation_network/{net_name}/params_grid_mu_out', 'wb') as handle:
+with open(f'~/Documents/Simulations/motion_anticipation_network/{net_name}/params_grid_mu_out', 'wb') as handle:
             pickle.dump(params, handle)
 
 

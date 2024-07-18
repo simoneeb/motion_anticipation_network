@@ -25,7 +25,7 @@ start = time.time()
 
 stim_name = stim_type
 params_name = 'params'
-filepath = f'/Users/simoneebert/Documents/Simulations/motion_anticipation_network/{net_name}'
+filepath = f'~/Documents/Simulations/motion_anticipation_network/{net_name}'
 
 params = make_params(filepath = filepath)
 #params = load_params(filepath,params_name)
@@ -67,7 +67,7 @@ x = 0
 
 # for si in speeds:
 #     stim_name = f'{stim_type}_{si}'
-#     filepath = f'/Users/simoneebert/Documents/Simulations/motion_anticipation_network/{net_name}/bar'
+#     filepath = f'~/Documents/Simulations/motion_anticipation_network/{net_name}/bar'
 #     params = modify_params(params, param_names = ['speed'], values=[si])
 #     ant_space = run_Reciporcal(params = params, filepath =f'{filepath}/{params_name}/{stim_name}', save_one = True,stim_type=stim_type)  
 

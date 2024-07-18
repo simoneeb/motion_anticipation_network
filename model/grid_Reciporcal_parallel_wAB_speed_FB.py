@@ -36,8 +36,8 @@ print(f'nb jobs :  {nb_jobs}, takes {dur} mins')
 refdict = {}
 
 # for si in speeds:
-#     fp = f'/Users/simoneebert/Documents/Simulations/motion_anticipation_network/Loops/{net_name}/wAB/wAB_0.0/smooth_{si}'
-#     #fp = f'/Users/simoneebert/Documents/Simulations/motion_anticipation_network/Loops/{net_name}/wGA/wGA_0.0/smooth_{si}'
+#     fp = f'~/Documents/Simulations/motion_anticipation_network/Loops/{net_name}/wAB/wAB_0.0/smooth_{si}'
+#     #fp = f'~/Documents/Simulations/motion_anticipation_network/Loops/{net_name}/wGA/wGA_0.0/smooth_{si}'
 
 #     with open(f'{fp}/out', 'rb') as handle:
 #         out = pickle.load(handle)
@@ -152,13 +152,13 @@ for i,xi in enumerate(X):
 
 print(sys.getsizeof(df))
 
-df.to_csv(f'/Users/simoneebert/Documents/Simulations/motion_anticipation_network/{net_name}/anticipation_data_wAB_zoom.csv')
-dfresRG.to_csv(f'/Users/simoneebert/Documents/Simulations/motion_anticipation_network/{net_name}/responses_RG_wAB_zoom.csv')
-dfresRB.to_csv(f'/Users/simoneebert/Documents/Simulations/motion_anticipation_network/{net_name}/responses_RB_wAB_zoom.csv')
+df.to_csv(f'~/Documents/Simulations/motion_anticipation_network/{net_name}/anticipation_data_wAB_zoom.csv')
+dfresRG.to_csv(f'~/Documents/Simulations/motion_anticipation_network/{net_name}/responses_RG_wAB_zoom.csv')
+dfresRB.to_csv(f'~/Documents/Simulations/motion_anticipation_network/{net_name}/responses_RB_wAB_zoom.csv')
 
 stop = time.time()
 params = X[-1][-1]
-with open(f'/Users/simoneebert/Documents/Simulations/motion_anticipation_network/{net_name}/params_grid_wAB_zoom', 'wb') as handle:
+with open(f'~/Documents/Simulations/motion_anticipation_network/{net_name}/params_grid_wAB_zoom', 'wb') as handle:
             pickle.dump(params, handle)
 
 

@@ -28,13 +28,13 @@ for val in vals:
     val = np.round(val,4)
     params_name = f'{param}/{param}_{val}'
     print(f'{param} = {val}')
-    filepath = f'/Users/simoneebert/Documents/Simulations/motion_anticipation_network/Loops/{net_name}'
+    filepath = f'~/Documents/Simulations/motion_anticipation_network/Loops/{net_name}'
 
     # loop over speeds 
     for si in speeds:
         stim_name = f'{stim_type}_{si}'
         #filepath = f'/Users/simone/Documents/Simulations/motion_anticipation_network/Loops/{net_name}'
-        filepath_p = f'/Users/simoneebert/Documents/Simulations/motion_anticipation_network/{net_name}'
+        filepath_p = f'~/Documents/Simulations/motion_anticipation_network/{net_name}'
         print(f'speed = {si}')
         #params = make_params(param_names = ['speed',param], param_vals=[si,val], filepath= f'{filepath}/{params_name}/{stim_name}')
      
