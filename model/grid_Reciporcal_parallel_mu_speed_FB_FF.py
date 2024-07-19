@@ -152,17 +152,20 @@ for i,xi in enumerate(X):
     dfresRB = pd.concat([dfresRB,dfnRB], ignore_index=True, axis=1)
 
 
-
-
 print(sys.getsizeof(df))
 
-df.to_csv(f'~/Documents/Simulations/motion_anticipation_network/{net_name}/anticipation_data_mu.csv')
-dfresRG.to_csv(f'~/Documents/Simulations/motion_anticipation_network/{net_name}/responses_RG_mu.csv')
-dfresRB.to_csv(f'~/Documents/Simulations/motion_anticipation_network/{net_name}/responses_RB_mu.csv')
+home = os.path.expanduser("~")
+filepath = f'{home}/Documents/Simulations/motion_anticipation_network/{net_name}'
+if not os.path.isdir(filepath):
+    os.makedirs(filepath)
+
+df.to_csv(f'{filepath}/anticipation_data_mu.csv')
+dfresRG.to_csv(f'{filepath}/responses_RG_mu.csv')
+dfresRB.to_csv(f'{filepath}/responses_RB_mu.csv')
 
 stop = time.time()
 params = X[-1][-1]
-with open(f'~/Documents/Simulations/motion_anticipation_network/{net_name}/params_grid_mu', 'wb') as handle:
+with open(f'{filepath}/params_grid_mu', 'wb') as handle:
             pickle.dump(params, handle)
 
 
@@ -175,7 +178,7 @@ print('Elapsed time for the entire processing: {:.2f} s'
 #     params_name = f'{param}/{param}_{val}'
 #     print(f'{param} = {val}')
 #     # loop over speeds : 
-#     for si in speeds:
+#     for si in speeds:                                                  
 #         stim_name = f'{stim_type}_{si}'
 #         filepath = f'/user/sebert/home/Documents/Simulations/motion/anticipation_1D/Reciporcal/{net_name}'
 #         print(f'speed = {si}')

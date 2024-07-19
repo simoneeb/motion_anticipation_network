@@ -30,6 +30,11 @@ for val in vals:
     print(f'{param} = {val}')
     filepath = f'~/Documents/Simulations/motion_anticipation_network/Loops/{net_name}'
 
+home = os.path.expanduser("~")
+filepath = f'{home}/Documents/Simulations/motion_anticipation_network/{net_name}'
+if not os.path.isdir(filepath):
+    os.makedirs(filepath)
+
     # loop over speeds 
     for si in speeds:
         stim_name = f'{stim_type}_{si}'

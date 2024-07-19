@@ -27,6 +27,11 @@ stim_name = stim_type
 params_name = 'params'
 filepath = f'~/Documents/Simulations/motion_anticipation_network/{net_name}'
 
+home = os.path.expanduser("~")
+filepath = f'{home}/Documents/Simulations/motion_anticipation_network/{net_name}'
+if not os.path.isdir(filepath):
+    os.makedirs(filepath)
+
 params = make_params(filepath = filepath)
 #params = load_params(filepath,params_name)
 params = modify_params(params, param_names= ['dt'], values=[0.001])

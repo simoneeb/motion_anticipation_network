@@ -144,13 +144,18 @@ for i,xi in enumerate(X):
     dfresRB = pd.concat([dfresRB,dfnRB], ignore_index=True, axis=1)
 
 
-df.to_csv(f'~/Documents/Simulations/motion_anticipation_network/{net_name}/anticipation_data_tauNB_in.csv')
-dfresRG.to_csv(f'~/Documents/Simulations/motion_anticipation_network/{net_name}/responses_RG_tauNB_in.csv')
-dfresRB.to_csv(f'~/Documents/Simulations/motion_anticipation_network/{ net_name}/responses_RB_tauNB_in.csv')
+home = os.path.expanduser("~")
+filepath = f'{home}/Documents/Simulations/motion_anticipation_network/{net_name}'
+if not os.path.isdir(filepath):
+    os.makedirs(filepath)
+
+df.to_csv(f'{filepath}/anticipation_data_tauNB_in.csv')
+dfresRG.to_csv(f'{filepath}/responses_RG_tauNB_in.csv')
+dfresRB.to_csv(f'{filepath}/responses_RB_tauNB_in.csv')
 
 stop = time.time()
 params = X[-1][-1]
-with open(f'~/Documents/Simulations/motion_anticipation_network/{net_name}/params_grid_tauNB_in', 'wb') as handle:
+with open(f'{filepath}/params_grid_tauNB_in', 'wb') as handle:
             pickle.dump(params, handle)
 
 

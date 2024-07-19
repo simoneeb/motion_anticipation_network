@@ -25,7 +25,7 @@ krec = .5
 #loop over tau-n
 #vals = np.arange(0.0001,0.001,.0002)
 vals = [0.001,0.002,0.003,0.004,0.005,0.006,0.007,0.008,0.009,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1]
-vals = vals[::2]
+# vals = vals[::2]
 #vals = [0.001,0.6,1]
 # vals = [0.0,0.001,0.002,0.003,0.004,0.005,0.006,0.007,0.008,0.009,0.01,0.012,0.015,0.017,0.02,0.025,0.03,0.035,0.04,0.045,0.05,0.055,0.6,0.065,0.07,0.075,0.08,0.085,0.09,0.095,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,1.1,1.2,1.3,1.4,1.5]
 # vals = [0.0,0.001,0.002]
@@ -90,7 +90,7 @@ def run(val1,val2,si):
     ncalcA = calc_n_f(krec,krel,betaA,si)
 
 
-    params = make_params(param_names = ['speed','krecB','krelB','betaB','krecA','krelA','betaA','wGA','wBA','plastic_to_G','plastic_to_A'], param_vals=[si,krec,krel,betaB,krec,krel,betaA,0.0,46.0,0,1])
+    params = make_params(param_names = ['speed','krecB','krelB','betaB','krecA','krelA','betaA','wGA','wBA','plastic_to_G','plastic_to_A'], param_vals=[si,krec,krel,betaB,krec,krel,betaA,0.0,46.0,1,0])
 
     [peak_RG,peak_RB,peak_drive,tp_rf_GC_mid,onset_RG,onset_RB,RG,RB,nmin_B, nmin_A] = run_Reciporcal(params = params, measure_n=True)   
 
@@ -135,7 +135,7 @@ def run(val1,val2,si):
 
 start = time.time()
 
-X = Parallel(n_jobs = 4, verbose=10)(delayed(run)(i[0],i[1],i[2]) for i in grid)
+X = Parallel(n_jobs = 20, verbose=10)(delayed(run)(i[0],i[1],i[2]) for i in grid)
 
 for i,xi in enumerate(X):
     data = xi[0]

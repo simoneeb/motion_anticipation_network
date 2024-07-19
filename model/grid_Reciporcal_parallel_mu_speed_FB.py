@@ -164,6 +164,12 @@ for i,xi in enumerate(X):
 
 print(sys.getsizeof(df))
 
+
+home = os.path.expanduser("~")
+filepath = f'{home}/Documents/Simulations/motion_anticipation_network/{net_name}'
+if not os.path.isdir(filepath):
+    os.makedirs(filepath)
+
 df.to_csv(f'~/Documents/Simulations/motion_anticipation_network/{net_name}/anticipation_data_mu.csv')
 dfresRG.to_csv(f'~/Documents/Simulations/motion_anticipation_network/{net_name}/responses_RG_mu.csv')
 dfresRB.to_csv(f'~/Documents/Simulations/motion_anticipation_network/{net_name}/responses_RB_mu.csv')
