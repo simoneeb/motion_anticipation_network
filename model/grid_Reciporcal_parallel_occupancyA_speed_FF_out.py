@@ -118,7 +118,7 @@ def run(val,si):
 
 start = time.time()
 
-X = Parallel(n_jobs = 6, verbose=10)(delayed(run)(i[0],i[1]) for i in grid)
+X = Parallel(n_jobs = 20, verbose=10)(delayed(run)(i[0],i[1]) for i in grid)
 
 for i,xi in enumerate(X):
     data = xi[0]
