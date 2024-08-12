@@ -84,9 +84,9 @@ def run(val,si):
 
     [peak_RG,peak_RB,peak_drive,tp_rf_GC_mid,onset_RG,onset_RB,RG,RB,nmin_B, nmin_A] = run_Reciporcal(params = params, measure_n=True)   
 
-    print(f'krel : {krel}')
-    print(f'krec : {krec}')
-    print(f'beta : {beta}')
+    # print(f'krel : {krel}')
+    # print(f'krec : {krec}')
+    # print(f'beta : {beta}')
 
 
     RG = RG[0::10]
