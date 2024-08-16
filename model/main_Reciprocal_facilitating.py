@@ -2,18 +2,18 @@ import os
 import numpy as np
 import time
 import matplotlib.pyplot as plt
-from run_Reciporcal import run_Reciporcal
-from params_Reciporcal import load_params, modify_params, make_params
+from run_Reciporcal_facilitating import run_Reciporcal_facilitating
+from params_Reciporcal_facilitating import load_params, modify_params, make_params
 import pickle
 import sys as syt
+
+
 
 '''
 script to loop over values for one parameter and simulate  model respons eto different speeds
 '''
 
-
-net_name = f'ff_thesis_linear'
-
+net_name = f'fb_thesis_linear_FACIL'
 
 
 # Simulate response to impule to show model STA
@@ -37,7 +37,7 @@ params = modify_params(params, param_names= ['dt'], values=[0.001])
 # load params
 # if not os.path.isdir(f'{filepath}/impulse'):
 #     os.makedirs(f'{filepath}/impulse')
-ant_space = run_Reciporcal(params = params, filepath =f'{filepath}', save_one = True, stim_type=stim_type)  
+ant_space = run_Reciporcal_facilitating(params = params, filepath =f'{filepath}', save_one = True, stim_type=stim_type)  
 print(params['saving_range'])
 
 with open(f'{filepath}/out', 'rb') as handle:
@@ -77,7 +77,7 @@ params = modify_params(params, param_names= ['dt'], values=[0.001])
 # load params
 # if not os.path.isdir(f'{filepath}/impulse'):
 #     os.makedirs(f'{filepath}/impulse')
-ant_space = run_Reciporcal(params = params, filepath =f'{filepath}', save_one = True, stim_type=stim_type)  
+ant_space = run_Reciporcal_facilitating(params = params, filepath =f'{filepath}', save_one = True, stim_type=stim_type)  
 print(params['saving_range'])
 
 with open(f'{filepath}/out', 'rb') as handle:

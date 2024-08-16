@@ -2,7 +2,7 @@
 import numpy as np
 
 
-class system(object):
+class system_facilitating(object):
 
 
     def __init__(self, 
@@ -32,7 +32,8 @@ class system(object):
         self.X0 = np.ones(self.nb_cells) * params['X0']
         self.G0 = np.ones(self.nb_GC_cells) * params['X0']
         self.A0 = np.ones(self.nb_cells) * params['X0']
-        self.n0 = np.ones(self.nb_cells)
+        self.n0 = np.ones(self.nb_cells) 
+        self.p0 = np.ones(self.nb_cells) * 0.5
 
         self.dt = params['dt']
         self.duration = params['duration']
@@ -61,10 +62,12 @@ class system(object):
                  'A': np.zeros((self.nb_cells, self.tps)),                 
                  'G': np.ones((self.nb_cells, self.tps)),                 
                  'n': np.zeros((self.nb_cells, self.tps)), 
+                 'p': np.zeros((self.nb_cells, self.tps)), 
 
                  'dX' : np.zeros((self.nb_cells, self.tps)),   
                  'dA' : np.zeros((self.nb_cells, self.tps)),   
                  'dn' : np.zeros((self.nb_cells, self.tps)),
+                 'dp' : np.zeros((self.nb_cells, self.tps)),
 
                  'rectification' : rectification,
 
@@ -75,17 +78,19 @@ class system(object):
         
 
     def solve_IPL_GainControl_Plasticity(self,GainF,N):
-
+        print(self.n0)
         nb_layers = len(self.Layers_IPL)
-        for layer in self.Layers_IPL:     # set inital condition for all cells 
+
+        for layer in self.Layers_IPL:      # set inital condition for all cells 
 
             layer['X'][:,0] = self.X0      
             layer['A'][:,0] = self.A0
             layer['n'][:,0] = self.n0
+            layer['p'][:,0] = self.p0
 
-        for t in range(1,self.tps-1):   # loop over timesteps 
+        for t in range(1,self.tps-1):     # loop over timesteps 
 
-            for l in range(nb_layers):  # Rectification
+            for l in range(nb_layers):    # Rectification
 
                 onesurTAU =-self.Layers_IPL[l]['W'][l][0,0]/2
 
@@ -117,6 +122,7 @@ class system(object):
                 
                 # add decay to gradient for plasticity, activity and voltage
                 self.Layers_IPL[l]['dn'][:,t-1] = np.dot(self.Layers_IPL[l]['Wn'][0],(1-self.Layers_IPL[l]['n'][:,t-1])) - np.dot(self.Layers_IPL[l]['Wn'][1],self.Layers_IPL[l]['X_rect_n'][:,t-1])*self.Layers_IPL[l]['n'][:,t-1]
+                self.Layers_IPL[l]['dp'][:,t-1] = np.dot(self.Layers_IPL[l]['Wn'][0],(0.5-self.Layers_IPL[l]['p'][:,t-1])) + np.dot(self.Layers_IPL[l]['Wn'][1],self.Layers_IPL[l]['X_rect_n'][:,t-1])*(1-self.Layers_IPL[l]['p'][:,t-1])
                 self.Layers_IPL[l]['dA'][:,t-1] = np.dot(self.Layers_IPL[l]['WA'][0],self.Layers_IPL[l]['A'][:,t-1]) + np.dot(self.Layers_IPL[l]['WA'][1],self.Layers_IPL[l]['X_rect_n'][:,t-1])
                 self.Layers_IPL[l]['dX'][:,t-1] += self.Layers_IPL[l]['F'][:,t-1] 
 
@@ -131,14 +137,14 @@ class system(object):
                     
                     else :        # if other layer, add input scaled by plasticty and gain 
                         if self.plastic_to_A == 1:
-                            self.Layers_IPL[l]['dX'][:,t-1] += np.dot(self.Layers_IPL[l]['W'][x],self.Layers_IPL[x]['X_rect'][:,t-1])* self.Layers_IPL[x]['n'][:,t-1] * self.Layers_IPL[x]['G'][:,t-1] 
+                            self.Layers_IPL[l]['dX'][:,t-1] += np.dot(self.Layers_IPL[l]['W'][x],self.Layers_IPL[x]['X_rect'][:,t-1])* self.Layers_IPL[x]['n'][:,t-1] * self.Layers_IPL[x]['p'][:,t-1]* self.Layers_IPL[x]['G'][:,t-1] 
                         else:
                             self.Layers_IPL[l]['dX'][:,t-1] += np.dot(self.Layers_IPL[l]['W'][x],self.Layers_IPL[x]['X_rect'][:,t-1]) * onesurTAU * self.Layers_IPL[x]['G'][:,t-1] 
-                            #self.Layers_IPL[l]['dX'][:,t-1] += np.dot(self.Layers_IPL[l]['W'][x],self.Layers_IPL[x]['X_rect'][:,t-1]) * self.Layers_IPL[x]['G'][:,t-1] 
 
 
                 # update state vector at time t
                 self.Layers_IPL[l]['n'][:,t] =  self.Layers_IPL[l]['n'][:,t-1]+ self.Layers_IPL[l]['dn'][:,t-1]*self.dt
+                self.Layers_IPL[l]['p'][:,t] =  self.Layers_IPL[l]['p'][:,t-1]+ self.Layers_IPL[l]['dp'][:,t-1]*self.dt
                 self.Layers_IPL[l]['X'][:,t] =  self.Layers_IPL[l]['X'][:,t-1]+ self.Layers_IPL[l]['dX'][:,t-1]*self.dt
                 self.Layers_IPL[l]['A'][:,t] =  self.Layers_IPL[l]['A'][:,t-1]+ self.Layers_IPL[l]['dA'][:,t-1]*self.dt
         
@@ -173,7 +179,7 @@ class system(object):
 
             for layer in self.Layers_IPL:
                 if self.plastic_to_G == 1:
-                    dG[:,t-1] +=  np.dot(layer['W_out'],layer['X_rect'][:,t-1]*layer['G'][:,t-1]*layer['n'][:,t-1]).flatten()
+                    dG[:,t-1] +=  np.dot(layer['W_out'],layer['X_rect'][:,t-1]*layer['G'][:,t-1]*layer['n'][:,t-1]*layer['p'][:,t-1]).flatten()
                 else : 
                     dG[:,t-1] +=  np.dot(layer['W_out'],layer['X_rect'][:,t-1]*layer['G'][:,t-1]).flatten()
                 

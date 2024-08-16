@@ -2,7 +2,7 @@ import os
 import numpy as np
 import time
 
-from run_Reciporcal import run_Reciporcal
+from run_Reciporcal_facilitating import run_Reciporcal_facilitating
 from params_Reciporcal import make_params, load_params,modify_params
 
 
@@ -12,11 +12,11 @@ TODO : paralellize
 '''
 
 
-net_name = f'ff_thesis_linear_plastic'
+net_name = f'fb_thesis_linear_FACIL'
 stim_type = 'smooth'
 
-param = 'wAB'       # parameter to loop over
-vals =[0.0,10.,20.,30.,46.,60.] #[46.0]        # values to test 
+param = 'betaA'       # parameter to loop over
+vals =[0.3] #[46.0]        # values to test 
 #vals =[-0.0005,-0.0007] #[46.0]        # values to test 
 
 speeds = [0.14,0.42,0.7,0.98,1.96]
@@ -43,9 +43,9 @@ for val in vals:
      
         params = load_params(filepath,'params')
         params = modify_params(params, param_names= ['speed',param], values=[si,val])
-        ant_space = run_Reciporcal(params = params, filepath =f'{filepath}/{params_name}/{stim_name}', save_one = True,stim_type=stim_type)  
+        ant_space = run_Reciporcal_facilitating(params = params, filepath =f'{filepath}/{params_name}/{stim_name}', save_one = True,stim_type=stim_type)  
+        print('facil loop')
         #os.system(f'python plot_codes/plot_Reciporcal_one.py {filepath}/{param} {param} {val} {stim_name}')
-        
 
     os.system(f'python plot_codes/plot_speeds_auto_one.py {filepath} {stim_type} {param} {val}')
 

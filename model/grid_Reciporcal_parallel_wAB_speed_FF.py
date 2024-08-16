@@ -18,8 +18,8 @@ net_name = f'ff_thesis_linear'
 
 stim_type = 'smooth'
 # loop over parameter
-n_params = 10
-vals2 = np.linspace(1,81,n_params)
+n_params = 20
+vals2 = np.linspace(1,54,n_params)
 
 speeds = [0.2,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.8]
 # speeds = [0.5,0.8]

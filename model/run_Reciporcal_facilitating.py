@@ -1,6 +1,6 @@
 from stimuli import stim_moving_object_for_2D_net
 from connectivity import connectivity
-from system import system
+from system_facilitating import system_facilitating
 from plotting import plotting
 from nonlinearities import N
 from utils  import GainF_B,GainF_G, DOG,measure_onset_anticipation
@@ -14,14 +14,13 @@ import sys as syt
 
 
 
-def run_Reciporcal(params, filepath = None, save_one = True, measure_n = False, stim_type = 'smooth'):
+def run_Reciporcal_facilitating(params, filepath = None, save_one = True, measure_n = False, stim_type = 'smooth'):
     
     """
     function to run the simulation of a reciprocal amacrine network for a given parameterset
 
-
     """
-
+    print('runs facil')
     if filepath is not None:
 
         if not os.path.isdir(filepath):
@@ -113,7 +112,7 @@ def run_Reciporcal(params, filepath = None, save_one = True, measure_n = False, 
     params = connecter.add_params()
 
     # create and solve the system
-    sys = system(params, W_GG, W_ActG, W_GtoActG)
+    sys = system_facilitating(params, W_GG, W_ActG, W_GtoActG)
 
     sys.create_layer([*W_connectivity_B],
                     W_ActB,W_BtoActB,
@@ -147,6 +146,7 @@ def run_Reciporcal(params, filepath = None, save_one = True, measure_n = False, 
 
     VB = np.zeros((nb_cells,tps))
     OB = np.zeros((nb_cells,tps))
+    PB = np.zeros((nb_cells,tps))
     NB = np.zeros((nb_cells,tps))
     AB = np.zeros((nb_cells,tps))
     GB = np.zeros((nb_cells,tps))
@@ -156,6 +156,7 @@ def run_Reciporcal(params, filepath = None, save_one = True, measure_n = False, 
 
         VB[c,:] = Layers[0]['X'][c]
         OB[c,:] = Layers[0]['n'][c]
+        PB[c,:] = Layers[0]['p'][c]
         #NB[c,:] = [N(v,params,'BC')for v in Layers[0]['X'][c]]
         NB[c,:] = Layers[0]['X_rect'][c]
         AB[c,:] =  Layers[0]['A'][c]
@@ -165,6 +166,7 @@ def run_Reciporcal(params, filepath = None, save_one = True, measure_n = False, 
         
     VA = np.zeros((nb_cells,tps))
     OA = np.zeros((nb_cells,tps))
+    PA = np.zeros((nb_cells,tps))
     NA = np.zeros((nb_cells,tps))
     AA = np.zeros((nb_cells,tps))
     GA = np.zeros((nb_cells,tps))
@@ -174,6 +176,7 @@ def run_Reciporcal(params, filepath = None, save_one = True, measure_n = False, 
 
         VA[c,:] = Layers[1]['X'][c]
         OA[c,:] = Layers[1]['n'][c]
+        PA[c,:] = Layers[1]['p'][c]
         #NB[c,:] = [N(v,params,'BC')for v in Layers[0]['X'][c]]
         NA[c,:] = Layers[1]['X_rect'][c]
         AA[c,:] =  Layers[1]['A'][c]
@@ -213,12 +216,14 @@ def run_Reciporcal(params, filepath = None, save_one = True, measure_n = False, 
             # 'res' : Layers,
             'VB': VB[middle_cell_BC-ran:middle_cell_BC+ran,:],
             'OB': OB[middle_cell_BC-ran:middle_cell_BC+ran,:],
+            'PB': PB[middle_cell_BC-ran:middle_cell_BC+ran,:],
             'AB' : AB[middle_cell_BC-ran:middle_cell_BC+ran,:],
             'NB' : NB[middle_cell_BC-ran:middle_cell_BC+ran,:],
             'GB' : GB[middle_cell_BC-ran:middle_cell_BC+ran,:],
             'RB' : RB[middle_cell_BC-ran:middle_cell_BC+ran,:],
             'VA': VA[middle_cell_BC-ran:middle_cell_BC+ran,:],
             'OA': OA[middle_cell_BC-ran:middle_cell_BC+ran,:],
+            'PA': PA[middle_cell_BC-ran:middle_cell_BC+ran,:],
             'AA' : AA[middle_cell_BC-ran:middle_cell_BC+ran,:],
             'NA' : NA[middle_cell_BC-ran:middle_cell_BC+ran,:],
             'GA' : GA[middle_cell_BC-ran:middle_cell_BC+ran,:],
@@ -252,8 +257,8 @@ def run_Reciporcal(params, filepath = None, save_one = True, measure_n = False, 
     onset_RG = measure_onset_anticipation( RG[middle_cell_GC,:])
     onset_RB = measure_onset_anticipation( RB[middle_cell_GC,:])
 
-    nmin_B = np.min(OB[middle_cell_BC,:])
-    nmin_A = np.min(OA[middle_cell_BC,:])
+    nmin_B = np.min(OB[middle_cell_GC,:])
+    nmin_A = np.min(OA[middle_cell_GC,:])
     if measure_n is True:
         return [max_RG,max_RB,max_drive,params['tps_rf_GC_mid'][middle_cell_GC], onset_RG,onset_RB,RG[middle_cell_GC,:],RB[middle_cell_GC,:],nmin_B,nmin_A]
     else:

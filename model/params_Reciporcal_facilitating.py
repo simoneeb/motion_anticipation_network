@@ -76,8 +76,8 @@ def make_params(param_names = None, param_vals = None, filepath = None):
     slope_n = 1
     threshold_n = 0.0
 
-    plastic_to_G = 1
-    plastic_to_A = 0
+    plastic_to_G = 0
+    plastic_to_A = 1
     krecB = 1.  #0.78# 2.0
     krelB = .5  #0.64# 2.0
     betaB =0.0  #0.6 #0.5#0.1  #0.3#.1#3#0.1#.30 #1360.0
@@ -85,7 +85,7 @@ def make_params(param_names = None, param_vals = None, filepath = None):
 
     krecA = 1. # 3#0.066#2.#35.66#2.0
     krelA = .5 # 6#0.0015#2.#0.54
-    betaA = 0.0 # 0.03#.0.04 #0.2#0.5# 0.03#0.3#2#1#.3#0.1#.300 #1360.0
+    betaA = 0.3 # 0.03#.0.04 #0.2#0.5# 0.03#0.3#2#1#.3#0.1#.300 #1360.0
 
 
     krecA2 = .1 #3#0.066#2.#35.66#2.0

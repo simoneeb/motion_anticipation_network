@@ -21,7 +21,7 @@ stim_type = 'smooth'
 
 # loop over parameter
 n_params = 10
-vals2= np.linspace(0.01,0.31,n_params)
+vals2= np.linspace(0.09,0.31,n_params)
 
 speeds = [0.2,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.8]
 #speeds = [0.1,0.4,0.7,1.0,2.0]
@@ -125,7 +125,7 @@ def run(val2,si):
 
 start = time.time()
 
-X = Parallel(n_jobs = 4, verbose=10)(delayed(run)(i[0],i[1]) for i in grid)
+X = Parallel(n_jobs = 20, verbose=10)(delayed(run)(i[0],i[1]) for i in grid)
 
 print(sys.getsizeof(X))
 

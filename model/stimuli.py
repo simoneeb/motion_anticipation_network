@@ -29,6 +29,7 @@ def spatial_kernel(stimulus,sig_c,sig_s,w=0):
 def biphasic_alpha(t,tauOPL,tauOPL2,SF):
     
     kern =  (t/tauOPL**2) * np.exp(-t/tauOPL) * np.heaviside(t,1) -  SF* (t/tauOPL2**2) * np.exp(-t/tauOPL2) * np.heaviside(t,1) 
+    # kern =   np.exp(-t/tauOPL) * np.heaviside(t,1) -  SF* (t/tauOPL2**2) * np.exp(-t/tauOPL2) * np.heaviside(t,1) 
     # kern = (t/tauOPL) * np.exp(-t/tauOPL) * np.heaviside(t,1) -  SF* (t/tauOPL2) * np.exp(-t/tauOPL2) * np.heaviside(t,1) 
     # kern = kern/(np.sum(kern)*0.001)
     #calculate integral
@@ -143,7 +144,7 @@ class stim_moving_object_for_2D_net(object):
 
         # create kernel
         self.ftime = np.arange(0,1,self.dt)
-        self.temporal_kernel =biphasic_alpha(self.ftime,*popt)
+        self.temporal_kernel = biphasic_alpha(self.ftime,*popt)
 
         return self.temporal_kernel
 
@@ -212,6 +213,21 @@ class stim_moving_object_for_2D_net(object):
         return self.barstim
 
 
+    def step_stimulus(self,length = 5.,start = 1.0, stop = 3.0, amplitude = 1):
+
+
+        self.tps = int(length/self.dt)
+        self.barstim = np.zeros((self.nb_cells,self.tps))
+
+        stimulus = (np.heaviside(np.arange(-start,length - start, self.dt), 1) - 1 * np.heaviside(
+        np.arange(-stop, length - stop, step = self.dt),1)) * (amplitude)  
+
+        for nb in range(self.nb_cells):
+            self.barstim[nb,:] = stimulus
+
+        #timeline = np.arange(0,length,self.dt)
+
+        return self.barstim
 
 
     def bar_interrupted(self):
@@ -232,13 +248,14 @@ class stim_moving_object_for_2D_net(object):
 
         #temporal = temporal_kernel(ftime, self.tauOPL)
 
-        self.outs = spatial_kernel(self.barstim,self.sig_c,self.sig_s,self.w)
+        # self.outs = spatial_kernel(self.barstim,self.sig_c,self.sig_s,self.w)
+        self.outs = spatial_kernel(self.barstim,self.sig_c,self.sig_s)
         self.outst = np.zeros((self.nb_cells,self.tps))
         for c in range(self.nb_cells):
 
             self.outst[c,:] = convolve(self.outs[c,:],self.temporal_kernel, mode = 'full')[:-len(self.temporal_kernel)+1]
 
-        self.outst = self.outst*self.input_scale 
+        self.outst = self.outst*self.input_scale*self.dt
 
 
         return self.outs,self.outst
@@ -253,6 +270,7 @@ class stim_moving_object_for_2D_net(object):
             outst[:-1] = self.outst[c,:].copy()
             outst_prime = [(outst[i]-outst[i-1])/self.dt for i in range(0,self.tps)]
             self.F_array[c,:] =self.outst[c,:]/self.tauB + outst_prime
+            # self.F_array[c,:] = self.outst[c,:] + outst_prime
 
         return self.F_array
     
@@ -278,6 +296,7 @@ class stim_moving_object_for_2D_net(object):
         #plt.show()
         if tosave == True:
             fig.savefig(f'{self.filepath}/plots/kernels.png')
+        plt.close()
 
 
     def plot_stim(self, tosave = True):
@@ -288,9 +307,11 @@ class stim_moving_object_for_2D_net(object):
 
         fig,ax = plt.subplots(4,1, sharex = True, figsize =  (16,12))
         ploti =int(self.nb_cells/2)
-        item = ax[0].plot(self.barstim[int(self.nb_cells/2),:]/self.barstim[ploti,:].max(), label = 'bar')
-        ax[0].plot(self.outs[int(self.nb_cells/2),:]/self.outs[int(self.nb_cells/2),:].max(), label = 'spatial')
-        ax[0].plot(self.outst[int(self.nb_cells/2),:]/self.outst[int(self.nb_cells/2),:].max(), label = 'spatiotemporal')
+        item = ax[0].plot(self.barstim[int(self.nb_cells/2),:], label = 'bar')
+        # ax[0].plot(self.outs[int(self.nb_cells/2),:]/self.outs[int(self.nb_cells/2),:].max(), label = 'spatial')
+        # ax[0].plot(self.outst[int(self.nb_cells/2),:]/self.outst[int(self.nb_cells/2),:].max(), label = 'spatiotemporal') 
+        ax[0].plot(self.outs[int(self.nb_cells/2),:], label = 'spatial')
+        ax[0].plot(self.outst[int(self.nb_cells/2),:], label = 'spatiotemporal')
         ax[0].axvline(self.spacing*100/self.speed,linestyle = ':', color = item[0].get_color())
         ax[0].set_xlabel('timesteps')
         ax[0].set_ylabel('inputs')
@@ -311,7 +332,7 @@ class stim_moving_object_for_2D_net(object):
         ax[0].legend()
         if tosave == True:
             fig.savefig(f'{self.filepath}/plots/stimulus.png')
-
+        plt.close()
 
 
     # def smooth_motion(self):
