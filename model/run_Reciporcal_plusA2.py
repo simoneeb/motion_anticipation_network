@@ -67,12 +67,12 @@ def run_Reciporcal_plusA2(params, filepath = None, save_one = False, measure_n =
 
     W_BB = connecter.weight_matrix_i_to_i(-1/params['tauB'],params['nb_cells'])
     W_BA = connecter.weight_matrix_i_to_nn(-1*params['wBA'],params['nb_cells'])
-    W_BA2 = connecter.weight_matrix_i_to_nnplusd(params['wBA2'],params['nb_cells'],d = 3)
+    W_BA2 = connecter.weight_matrix_i_to_i(params['wBA2'],params['nb_cells'])
 
 
     W_A2A2 = connecter.weight_matrix_i_to_i(-1/params['tauA2'],params['nb_cells'])
     W_A2B = connecter.weight_matrix_i_to_i(params['wA2B'],params['nb_cells'])
-    W_A2A = connecter.weight_matrix_i_to_nn(-1*params['wA2A'],params['nb_cells'])
+    W_A2A = connecter.weight_matrix_i_to_i(-1*params['wA2A'],params['nb_cells'])
 
     W_AA = connecter.weight_matrix_i_to_i(-1/params['tauA'],params['nb_cells'])
     W_AB = connecter.weight_matrix_i_to_nn(params['wAB'],params['nb_cells'])
@@ -99,7 +99,6 @@ def run_Reciporcal_plusA2(params, filepath = None, save_one = False, measure_n =
 
     W_krecA = connecter.weight_matrix_i_to_i(params['krecA'],params['nb_cells'])
     W_krelA = connecter.weight_matrix_i_to_i(params['krelA']*params['betaA'],params['nb_cells'])
-
 
     W_krecA2 = connecter.weight_matrix_i_to_i(params['krecA2'],params['nb_cells'])
     W_krelA2 = connecter.weight_matrix_i_to_i(params['krelA2']*params['betaA2'],params['nb_cells'])

@@ -7,13 +7,13 @@ from params_Reciporcal import load_params, modify_params, make_params
 import pickle
 import sys as syt
 
+
+
 '''
 script to loop over values for one parameter and simulate  model respons eto different speeds
 '''
 
-
 net_name = f'ff_thesis_linear'
-
 
 
 # Simulate response to impule to show model STA
@@ -40,7 +40,7 @@ params = modify_params(params, param_names= ['dt'], values=[0.001])
 ant_space = run_Reciporcal(params = params, filepath =f'{filepath}', save_one = True, stim_type=stim_type)  
 print(params['saving_range'])
 
-with open(f'{filepath}/out', 'rb') as handle:
+with open(f'{filepath}/out_{stim_type}', 'rb') as handle:
     out = pickle.load(handle)
 
 time = np.arange(0,len(out['VG']))*params['dt']
@@ -80,7 +80,7 @@ params = modify_params(params, param_names= ['dt'], values=[0.001])
 ant_space = run_Reciporcal(params = params, filepath =f'{filepath}', save_one = True, stim_type=stim_type)  
 print(params['saving_range'])
 
-with open(f'{filepath}/out', 'rb') as handle:
+with open(f'{filepath}/out_{stim_type}', 'rb') as handle:
     out = pickle.load(handle)
 
 time = np.arange(0,len(out['VG']))*params['dt']

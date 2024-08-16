@@ -242,7 +242,7 @@ def run_Reciporcal(params, filepath = None, save_one = True, measure_n = False, 
     if filepath is not None:
 
         print('saving output')
-        with open(f'{filepath}/out', 'wb') as handle:
+        with open(f'{filepath}/out_{stim_type}', 'wb') as handle:
             pickle.dump(out, handle)
             
         with open(f'{filepath}/params', 'wb') as handle:

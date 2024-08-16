@@ -118,7 +118,7 @@ def run(val2,si):
 
 start = time.time()
 
-X = Parallel(n_jobs = 4, verbose=10)(delayed(run)(i[0],i[1]) for i in grid)
+X = Parallel(n_jobs = 20, verbose=10)(delayed(run)(i[0],i[1]) for i in grid)
 
 print(sys.getsizeof(X))
 
