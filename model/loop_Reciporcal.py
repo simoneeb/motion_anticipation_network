@@ -12,7 +12,11 @@ TODO : paralellize
 '''
 
 
+<<<<<<< Updated upstream
 net_name = f'fb_thesis_linear_pastic_tes3'
+=======
+net_name = f'fb_thesis_linear_test'
+>>>>>>> Stashed changes
 stim_type = 'smooth'
 
 param = 'betaA'       # parameter to loop over
@@ -33,23 +37,26 @@ for val in vals:
 
     home = os.path.expanduser("~")
     filepath = f'{home}/Documents/Simulations/motion_anticipation_network/{net_name}'
+    params = load_params(filepath,'params')
+
     if not os.path.isdir(filepath):
         os.makedirs(filepath)
 
     # loop over speeds 
     for si in speeds:
         stim_name = f'{stim_type}_{si}'
+        filepath = f'{home}/Documents/Simulations/motion_anticipation_network/Loops/{net_name}'
+
         #filepath = f'/Users/simone/Documents/Simulations/motion_anticipation_network/Loops/{net_name}'
         print(f'speed = {si}')
         #params = make_params(param_names = ['speed',param], param_vals=[si,val], filepath= f'{filepath}/{params_name}/{stim_name}')
      
-        params = load_params(filepath,'params')
         params = modify_params(params, param_names= ['speed',param], values=[si,val])
         ant_space = run_Reciporcal(params = params, filepath =f'{filepath}/{params_name}/{stim_name}', save_one = True,stim_type=stim_type)  
-        #os.system(f'python plot_codes/plot_Reciporcal_one.py {filepath}/{param} {param} {val} {stim_name}')
+        os.system(f'python model/plot_codes/plot_Reciporcal_one.py {filepath}/{param} {param} {val} {stim_name}')
         
 
-    os.system(f'python plot_codes/plot_speeds_auto_one.py {filepath} {stim_type} {param} {val}')
+    os.system(f'python model/plot_codes/plot_speeds_auto_one.py {filepath} {stim_type} {param} {val}')
 
 
 

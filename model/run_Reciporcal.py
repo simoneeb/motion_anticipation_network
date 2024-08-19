@@ -14,7 +14,7 @@ import sys as syt
 
 
 
-def run_Reciporcal(params, filepath = None, save_one = True, measure_n = False, stim_type = 'smooth'):
+def run_Reciporcal(params, filepath = None, save_one = True, measure_n = False, stim_type = 'smooth',step_stop = None):
     
     """
     function to run the simulation of a reciprocal amacrine network for a given parameterset
@@ -53,8 +53,11 @@ def run_Reciporcal(params, filepath = None, save_one = True, measure_n = False, 
         bar = stimulus_maker.impulse_stimulus()
 
     if stim_type == 'step':
-        bar = stimulus_maker.step_stimulus()
-        
+        if step_stop is not None:
+            bar = stimulus_maker.step_stimulus(stop = step_stop)
+        else:
+            bar = stimulus_maker.step_stimulus()
+
     #_ = stimulus_maker.load_filter()
     tkern = stimulus_maker.filter_biphasic_norm()
 

@@ -39,9 +39,15 @@ def make_params(param_names = None, param_vals = None, filepath = None):
     w_BC = 0.4 # 0.5 ??????????
     w_GC = 0.0 # 0.5
 
+<<<<<<< Updated upstream
     tauA = 0.15 #0.156 #0.218 #= RAM mono linear fitted to ACM   # RAM fitted to ACM  = 0.156  
     tauA2 = 0.3   #0.017
     tauB =0.08   #0.01
+=======
+    tauA = 0.2 #0.156 #0.218 #= RAM mono linear fitted to ACM   # RAM fitted to ACM  = 0.156  
+    tauA2 = 0.3   #0.017
+    tauB =0.01   #0.01
+>>>>>>> Stashed changes
     tauG = 0.01   # 0.01  #0.01
 
     tauOPL = 0.04 #0.086   #0.05508089
@@ -59,7 +65,7 @@ def make_params(param_names = None, param_vals = None, filepath = None):
 
     d = 1
     wGB = 0.0400
-    wGA = 0.#-0.0400/wAB
+    wGA =0.# -0.0400/wAB
     wGA2 = 0.0
 
     rectification_BC = False

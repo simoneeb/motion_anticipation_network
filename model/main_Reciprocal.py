@@ -13,7 +13,11 @@ import sys as syt
 script to loop over values for one parameter and simulate  model respons eto different speeds
 '''
 
+<<<<<<< Updated upstream
 net_name = f'fb_thesis_linear_pastic_tes1'
+=======
+net_name = f'fb_thesis_linear_test'
+>>>>>>> Stashed changes
 
 
 # Simulate response to impule to show model STA
@@ -58,7 +62,8 @@ fig.savefig(f'{filepath}/plots/STA_fit.svg', format = 'svg')
 x = 0 
 
 
-# Simulate response to impule to show model STA
+# Simulate response to steps of different lengths
+step_stops = [1.5,2.,3.]
 stim_type = 'step'
 
 
@@ -77,23 +82,28 @@ params = modify_params(params, param_names= ['dt'], values=[0.001])
 # load params
 # if not os.path.isdir(f'{filepath}/impulse'):
 #     os.makedirs(f'{filepath}/impulse')
-ant_space = run_Reciporcal(params = params, filepath =f'{filepath}', save_one = True, stim_type=stim_type)  
-print(params['saving_range'])
 
-with open(f'{filepath}/out_{stim_type}', 'rb') as handle:
-    out = pickle.load(handle)
+for step_stop in step_stops:
+    ant_space = run_Reciporcal(params = params, filepath =f'{filepath}', save_one = True, stim_type=stim_type,step_stop = step_stop)  
+    print(params['saving_range'])
 
-time = np.arange(0,len(out['VG']))*params['dt']
+    with open(f'{filepath}/out_{stim_type}', 'rb') as handle:
+        out = pickle.load(handle)
 
-fig = plt.figure()
-ax = fig.add_subplot(211)
-ax.plot(time,out['VB'][0], label = 'VB')
-ax.plot(time,out['VA'][0], label = 'VA')
+    with open(f'{filepath}/out_{stim_type}_{step_stop}', 'wb') as handle:
+        pickle.dump(out, handle)
 
-ax = fig.add_subplot(212)
-ax.plot(time,out['VG'], label = 'VG')
-fig.legend()
-fig.savefig(f'{filepath}/plots/step.svg', format = 'svg')
+    time = np.arange(0,len(out['VG']))*params['dt']
+
+    fig = plt.figure()
+    ax = fig.add_subplot(211)
+    ax.plot(time,out['VB'][0], label = 'VB')
+    ax.plot(time,out['VA'][0], label = 'VA')
+
+    ax = fig.add_subplot(212)
+    ax.plot(time,out['VG'], label = 'VG')
+    fig.legend()
+    fig.savefig(f'{filepath}/plots/step_{step_stop}.svg', format = 'svg')
 
 
 
@@ -108,11 +118,9 @@ fig.legend()
 fig.savefig(f'{filepath}/plots/stim.svg', format = 'svg')
 print(params)
 
-#plot response
-
-
+# plot response
 # stim_type = 'smooth'
-# #speeds = [0.14,0.42,0.7,0.98,1.96]
+# speeds = [0.14,0.42,0.7,0.98,1.96]
 # speeds = [0.1,0.2,0.3,0.4,0.4,0.5,0.6,0.7,0.8,0.9,1.0,2.0]
 
 # times = []
