@@ -12,7 +12,7 @@ TODO : paralellize
 '''
 
 
-net_name = f'fb_thesis_linear_pastic_tes1'
+net_name = f'fb_thesis_linear_pastic_tes3'
 stim_type = 'smooth'
 
 param = 'betaA'       # parameter to loop over
