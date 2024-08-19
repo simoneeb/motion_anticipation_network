@@ -14,18 +14,20 @@ from utils import measure_onset_anticipation
 
 
 
-net_name = f'fb_thesis_linear'
+net_name = f'fb_thesis_linear_nonorm'
 
 stim_type = 'smooth'
 
 # loop over parameter
 n_params = 20
 vals2 = np.linspace(1,81,n_params)
-vals2 = np.linspace(1,21,n_params)
+vals2 = np.linspace(1,101,n_params) *46.0
+vals2 = np.linspace(1,21,n_params) 
 
 speeds = [0.2,0.23,0.25,0.27,0.3,0.32,0.35,0.37,0.4,0.42,0.45,0.47,0.5]
 #speeds = [0.1,0.4,0.7,1.0,2.0]
-
+speeds = np.asarray([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2.0])
+speeds = speeds[::2]
 # speeds = [0.5,0.8]
 nb_jobs = len(vals2)*len(speeds)
 dur = (nb_jobs*11.5)/60
@@ -63,7 +65,7 @@ grid = np.array(np.meshgrid(vals2,speeds)).T.reshape(-1,2)
 def run(val2,si):
 
     params = make_params(['speed'],[si])
-    params['wBA'] = 46.0
+    params['wBA'] = 20.
     params['wGA'] = 0.0
     
     wBA=  params['wBA']

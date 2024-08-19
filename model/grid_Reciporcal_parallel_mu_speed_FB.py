@@ -21,14 +21,14 @@ from utils import measure_onset_anticipation
 #     #return onset_ref - onset_sim
 
 net_name = f'Reciporcal_mono_linear_heavy_maxan_equalweight/noGCGainControl'
-net_name = f'fb_thesis_linear'
+net_name = f'fb_thesis_linear_nonorm'
 
 stim_type = 'smooth'
 
 # loop over parameter
 n_params = 20
 vals1 = np.linspace(0.09,0.31,n_params)
-vals2 = np.linspace(1,101,n_params)
+vals2 = np.linspace(1,101,n_params) 
 # vals2 =[0.01,0.3]
 # vals1 =[1,10]
 speeds = [0.1,0.5,1.0,2.0]
@@ -73,7 +73,7 @@ def run(val1,val2,si):
     params = make_params()
 
     tauB = params['tauB']
-    wBA =  1.0
+    wBA =  46.0
     # tauTOT = np.round(val1,2)
     # wTOT = np.round(val2,2)
     

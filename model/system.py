@@ -133,8 +133,8 @@ class system(object):
                         if self.plastic_to_A == 1:
                             self.Layers_IPL[l]['dX'][:,t-1] += np.dot(self.Layers_IPL[l]['W'][x],self.Layers_IPL[x]['X_rect'][:,t-1])* self.Layers_IPL[x]['n'][:,t-1] * self.Layers_IPL[x]['G'][:,t-1] 
                         else:
-                            self.Layers_IPL[l]['dX'][:,t-1] += np.dot(self.Layers_IPL[l]['W'][x],self.Layers_IPL[x]['X_rect'][:,t-1]) * onesurTAU * self.Layers_IPL[x]['G'][:,t-1] 
-                            #self.Layers_IPL[l]['dX'][:,t-1] += np.dot(self.Layers_IPL[l]['W'][x],self.Layers_IPL[x]['X_rect'][:,t-1]) * self.Layers_IPL[x]['G'][:,t-1] 
+                            #self.Layers_IPL[l]['dX'][:,t-1] += np.dot(self.Layers_IPL[l]['W'][x],self.Layers_IPL[x]['X_rect'][:,t-1]) * onesurTAU * self.Layers_IPL[x]['G'][:,t-1] 
+                            self.Layers_IPL[l]['dX'][:,t-1] += np.dot(self.Layers_IPL[l]['W'][x],self.Layers_IPL[x]['X_rect'][:,t-1]) * self.Layers_IPL[x]['G'][:,t-1] 
 
 
                 # update state vector at time t

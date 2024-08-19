@@ -12,15 +12,17 @@ TODO : paralellize
 '''
 
 
-net_name = f'ff_thesis_linear_plastic'
+net_name = f'fb_thesis_linear_pastic_tes1'
 stim_type = 'smooth'
 
-param = 'wAB'       # parameter to loop over
-vals =[0.0,10.,20.,30.,46.,60.] #[46.0]        # values to test 
+param = 'betaA'       # parameter to loop over
+vals =[0.,10.] #[46.0]        # values to test 
 #vals =[-0.0005,-0.0007] #[46.0]        # values to test 
 
 speeds = [0.14,0.42,0.7,0.98,1.96]
 speeds = [0.1,0.2,0.3,0.4,0.4,0.5,0.6,0.7,0.8,0.9,1.0,2.0]
+speeds = np.asarray([1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9])
+speeds = np.asarray([0.1,0.2,0.3,0.4,0.4,0.5,0.6,0.7,0.8,0.9,1.0,2.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9])
 
 start = time.time()
 

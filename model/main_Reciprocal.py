@@ -13,7 +13,7 @@ import sys as syt
 script to loop over values for one parameter and simulate  model respons eto different speeds
 '''
 
-net_name = f'ff_thesis_linear'
+net_name = f'fb_thesis_linear_pastic_tes1'
 
 
 # Simulate response to impule to show model STA
@@ -106,7 +106,7 @@ ax = fig.add_subplot(212)
 ax.plot(time,out['F'], label = 'F')
 fig.legend()
 fig.savefig(f'{filepath}/plots/stim.svg', format = 'svg')
-
+print(params)
 
 #plot response
 

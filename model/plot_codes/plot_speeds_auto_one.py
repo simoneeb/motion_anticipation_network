@@ -9,6 +9,7 @@ import os
 # define what to compare
 save = True
 unit = 'space'
+stim_type = 'smooth'
 #speeds = np.flip([5.0,4.5,4.0,3.5,3.0,2.9,2.8,2.7,2.6])
 speeds = [0.14,0.42,0.7,0.98,1.96]
 speeds = [0.1,0.2,0.3,0.4,0.4,0.5,0.6,0.7,0.8,0.9,1.0,2.0]
@@ -41,7 +42,7 @@ for i,s in enumerate(speeds):
 
     fp = f'{filepath}/{param}/{par}/{stim_type}_{s}'
     print(fp)
-    with open(f'{fp}/out', 'rb') as handle:
+    with open(f'{fp}/out_{stim_type}', 'rb') as handle:
         out = pickle.load(handle)
 
     with open(f'{fp}/params', 'rb') as handle:
@@ -71,7 +72,7 @@ if unit == 'time':
     ax.set_xlabel('time [s]')
     ax2.set_ylabel('anticipation [ms]')
 
-ax2.set_xscale('log')
+# ax2.set_xscale('log')
 ax2.axhline(0, linestyle = ':')
 ax2.plot(speeds,antis, color = 'k')
 
