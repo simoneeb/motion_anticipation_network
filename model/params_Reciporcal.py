@@ -55,7 +55,7 @@ def make_params(param_names = None, param_vals = None, filepath = None):
     SF =0.# 1.
     input_scale = 1.#0.1 #0.1 #5.#0.1#0.025#5# 800#459#800
 
-    wAB = 3.#22.   # 10.#44. #= RAM mono linear fitted to ACM   # RAM fitted to ACM = 22
+    wAB = 30.#22.   # 10.#44. #= RAM mono linear fitted to ACM   # RAM fitted to ACM = 22
     wBA = 31.#46.#46. # 46.# 31.#31. #= RAM mono linear fitted to ACM   # RAM fitted to ACM = 31
 
     wA2B = 0.#46.

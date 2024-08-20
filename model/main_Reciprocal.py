@@ -14,9 +14,13 @@ script to loop over values for one parameter and simulate  model respons eto dif
 '''
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 net_name = f'fb_thesis_linear_pastic_tes1'
 =======
 net_name = f'fb_thesis_linear_test'
+>>>>>>> Stashed changes
+=======
+net_name = f'fb_thesis_linear_pastic_tes3'
 >>>>>>> Stashed changes
 
 
