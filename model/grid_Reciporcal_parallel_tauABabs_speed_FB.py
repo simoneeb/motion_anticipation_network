@@ -14,16 +14,28 @@ from utils import measure_onset_anticipation
 
 
 
-net_name = f'fb_thesis_linear'
+net_name = f'fb_linear'
 
 stim_type = 'smooth'
 
 
 # loop over parameter
-n_params = 10
-vals2= np.linspace(0.09,0.31,n_params)
+n_params = 30
+#vals =[-0.0005,-0.0007] #[46.0]        # values to test 
+vals2 = np.linspace(0.03,0.14,n_params)
+x = 5.8
 
-speeds = [0.2,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.8]
+speeds = [0.14,0.42,0.7,0.98,1.96]
+speeds = [0.1,0.2,0.3,0.4,0.4,0.5,0.6,0.7,0.8,0.9,1.0,2.0]
+speeds = np.asarray([1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9])
+speeds = np.asarray([0.1,0.2,0.3,0.4,0.4,0.5,0.6,0.7,0.8,0.9,1.0,2.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9])
+speeds = speeds[::2]
+speeds = np.round(np.arange(0.1,2.0,0.05),2)
+
+
+
+start = time.time()
+
 #speeds = [0.1,0.4,0.7,1.0,2.0]
 
 # speeds = [0.5,0.8]
@@ -63,19 +75,22 @@ grid = np.array(np.meshgrid(vals2,speeds)).T.reshape(-1,2)
 def run(val2,si):
 
     params = make_params(['speed'],[si])
-    params['wBA'] = 46.0
-    params['wAB'] = 46.0
+    params['wBA'] = 10.0
+    params['wAB'] = 10.0
     params['wGA'] = 0.0
     
     wBA=  params['wBA']
-    tauB =  params['tauB']
     wAB=  params['wAB']
     wGA=  params['wGA']
 
     # tauTOT = np.round(val1,2)
     # wTOT = np.round(val2,2)
-    tauA = np.round(val2,2)
+    tauB = np.round(val2,2)
 
+    tauA = 1/(-x+1/tauB)
+    tauA = np.round(tauA,2)
+
+    print(tauA,tauB)
     tauTOT = 1/tauA - 1/tauB
     # wBA = wTOT/wAB
 
@@ -87,6 +102,7 @@ def run(val2,si):
     # print(tauA)
     # print(wBA)
     params['tauA'] = tauA
+    params['tauB'] = tauB
     #params = make_params(param_names = ['speed','wAB'], param_vals=[si,wAB])
 
     [peak_RG,peak_RB,peak_drive,tp_rf_GC_mid,onset_RG,onset_RB,RG,RB,VG] = run_Reciporcal(params = params)   
@@ -103,6 +119,7 @@ def run(val2,si):
 
     data = {'wAB': wAB,
             'tauA': tauA,
+            'tauB': tauB,
             'tauTOT': tauTOT,
             'wBA': wBA,
             'wGA': wGA,
@@ -160,13 +177,13 @@ filepath = f'{home}/Documents/Simulations/motion_anticipation_network/{net_name}
 if not os.path.isdir(filepath):
     os.makedirs(filepath)
 
-df.to_csv(f'{filepath}/anticipation_data_tauA.csv')
-dfresRG.to_csv(f'{filepath}/responses_RG_tauA.csv')
-dfresRB.to_csv(f'{filepath}/responses_RB_tauA.csv')
+df.to_csv(f'{filepath}/anticipation_data_tauABabs.csv')
+dfresRG.to_csv(f'{filepath}/responses_RG_tauABabs.csv')
+dfresRB.to_csv(f'{filepath}/responses_RB_tauABabs.csv')
 
 stop = time.time()
 params = X[-1][-1]
-with open(f'{filepath}/params_grid_tauA', 'wb') as handle:
+with open(f'{filepath}/params_grid_tauABabs', 'wb') as handle:
             pickle.dump(params, handle)
 
 

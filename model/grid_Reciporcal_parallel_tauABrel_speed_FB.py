@@ -18,17 +18,26 @@ net_name = f'fb_linear'
 
 stim_type = 'smooth'
 
+
 # loop over parameter
 n_params = 30
-vals2 = np.linspace(1,81,n_params)
-vals2 = np.linspace(1,101,n_params) *46.0
-vals2 = np.linspace(1,31,n_params) 
+#vals =[-0.0005,-0.0007] #[46.0]        # values to test 
+vals2 = np.linspace(1.,10,n_params)
+x = 5.8
 
-speeds = [0.2,0.23,0.25,0.27,0.3,0.32,0.35,0.37,0.4,0.42,0.45,0.47,0.5]
+speeds = [0.14,0.42,0.7,0.98,1.96]
+speeds = [0.1,0.2,0.3,0.4,0.4,0.5,0.6,0.7,0.8,0.9,1.0,2.0]
+speeds = np.asarray([1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9])
+speeds = np.asarray([0.1,0.2,0.3,0.4,0.4,0.5,0.6,0.7,0.8,0.9,1.0,2.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9])
+speeds = speeds[::2]
+speeds = np.round(np.arange(0.1,2.0,0.05),2)
+
+
+
+start = time.time()
+
 #speeds = [0.1,0.4,0.7,1.0,2.0]
-speeds = np.asarray([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2.0])
-speeds = np.arange(0.1,2.0,0.05)
-#speeds = speeds[::2]
+
 # speeds = [0.5,0.8]
 nb_jobs = len(vals2)*len(speeds)
 dur = (nb_jobs*11.5)/60
@@ -66,19 +75,25 @@ grid = np.array(np.meshgrid(vals2,speeds)).T.reshape(-1,2)
 def run(val2,si):
 
     params = make_params(['speed'],[si])
-    params['wAB'] = 10.
+    params['wBA'] = 10.0
+    params['wAB'] = 10.0
     params['wGA'] = 0.0
     
-    wAB=  params['wBA']
+    wBA=  params['wBA']
+    wAB=  params['wAB']
     wGA=  params['wGA']
+    tauB =  params['tauB']
 
     # tauTOT = np.round(val1,2)
     # wTOT = np.round(val2,2)
     
-    # tauA = 1/(tauTOT + 1/tauB)
+    x = np.round(val2,2)
+    tauA =  np.round(1/(-x+1/tauB),2)
+
+
+    tauTOT = 1/tauA - 1/tauB
     # wBA = wTOT/wAB
 
-    wBA = np.round(val2,2)
     
     wTOT = wBA*wAB
 
@@ -86,7 +101,8 @@ def run(val2,si):
 
     # print(tauA)
     # print(wBA)
-    params['wBA'] = wBA
+    params['tauA'] = tauA
+    params['tauB'] = tauB
     #params = make_params(param_names = ['speed','wAB'], param_vals=[si,wAB])
 
     [peak_RG,peak_RB,peak_drive,tp_rf_GC_mid,onset_RG,onset_RB,RG,RB,VG] = run_Reciporcal(params = params)   
@@ -102,8 +118,10 @@ def run(val2,si):
     RB = RB[0::10]
 
     data = {'wAB': wAB,
-            'tauB': params['tauB'],
-            'wTOT': wTOT,
+            'tauA': tauA,
+            'tauB': tauB,
+            'x': x,
+            'tauTOT': tauTOT,
             'wBA': wBA,
             'wGA': wGA,
             'speed' : si,
@@ -160,13 +178,13 @@ filepath = f'{home}/Documents/Simulations/motion_anticipation_network/{net_name}
 if not os.path.isdir(filepath):
     os.makedirs(filepath)
 
-df.to_csv(f'{filepath}/anticipation_data_wAB_zoom.csv')
-dfresRG.to_csv(f'{filepath}/responses_RG_wAB_zoom.csv')
-dfresRB.to_csv(f'{filepath}/responses_RB_wAB_zoom.csv')
+df.to_csv(f'{filepath}/anticipation_data_tauABrel.csv')
+dfresRG.to_csv(f'{filepath}/responses_RG_tauABrel.csv')
+dfresRB.to_csv(f'{filepath}/responses_RB_tauABrel.csv')
 
 stop = time.time()
 params = X[-1][-1]
-with open(f'{filepath}/params_grid_wAB_zoom', 'wb') as handle:
+with open(f'{filepath}/params_grid_tauABrel', 'wb') as handle:
             pickle.dump(params, handle)
 
 

@@ -12,13 +12,15 @@ TODO : paralellize
 '''
 
 
-net_name = f'fb_linear_test'
+net_name = f'fb_linear'
 
 stim_type = 'smooth'
 
-param = 'wBA'                           # parameter to loop over
-vals =[46.] #[46.0]               # values to test 
+param = 'tauB'       # parameter to loop over
+
 #vals =[-0.0005,-0.0007] #[46.0]        # values to test 
+vals = np.arange(0.03,0.14,0.01)
+x = 5.8
 
 speeds = [0.14,0.42,0.7,0.98,1.96]
 speeds = [0.1,0.2,0.3,0.4,0.4,0.5,0.6,0.7,0.8,0.9,1.0,2.0]
@@ -29,6 +31,7 @@ start = time.time()
 
 for val in vals:
     val = np.round(val,4)
+    tauAval =  1/(-x+1/val)
     params_name = f'{param}/{param}_{val}'
     print(f'{param} = {val}')
 
@@ -48,7 +51,7 @@ for val in vals:
         print(f'speed = {si}')
         #params = make_params(param_names = ['speed',param], param_vals=[si,val], filepath= f'{filepath}/{params_name}/{stim_name}')
      
-        params = modify_params(params, param_names= ['speed',param], values=[si,val])
+        params = modify_params(params, param_names= ['speed',param,'tauA'], values=[si,val,tauAval])
         ant_space = run_Reciporcal(params = params, filepath =f'{filepath}/{params_name}/{stim_name}', save_one = True,stim_type=stim_type)  
 
 

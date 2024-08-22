@@ -39,15 +39,9 @@ def make_params(param_names = None, param_vals = None, filepath = None):
     w_BC = 0.4 # 0.5 ??????????
     w_GC = 0.0 # 0.5
 
-<<<<<<< Updated upstream
-    tauA = 0.15 #0.156 #0.218 #= RAM mono linear fitted to ACM   # RAM fitted to ACM  = 0.156  
+    tauA = 0.05 #0.156 #0.218 #= RAM mono linear fitted to ACM   # RAM fitted to ACM  = 0.156  
     tauA2 = 0.3   #0.017
-    tauB =0.08   #0.01
-=======
-    tauA = 0.2 #0.156 #0.218 #= RAM mono linear fitted to ACM   # RAM fitted to ACM  = 0.156  
-    tauA2 = 0.3   #0.017
-    tauB =0.01   #0.01
->>>>>>> Stashed changes
+    tauB =0.08  #0.01
     tauG = 0.01   # 0.01  #0.01
 
     tauOPL = 0.04 #0.086   #0.05508089
@@ -55,8 +49,8 @@ def make_params(param_names = None, param_vals = None, filepath = None):
     SF =0.# 1.
     input_scale = 1.#0.1 #0.1 #5.#0.1#0.025#5# 800#459#800
 
-    wAB = 30.#22.   # 10.#44. #= RAM mono linear fitted to ACM   # RAM fitted to ACM = 22
-    wBA = 31.#46.#46. # 46.# 31.#31. #= RAM mono linear fitted to ACM   # RAM fitted to ACM = 31
+    wAB = 46.#10.#22.   # 10.#44. #= RAM mono linear fitted to ACM   # RAM fitted to ACM = 22
+    wBA = 46.#10.#31.#46.#46. # 46.# 31.#31. #= RAM mono linear fitted to ACM   # RAM fitted to ACM = 31
 
     wA2B = 0.#46.
     wA2A = 0. #46.0
@@ -65,7 +59,7 @@ def make_params(param_names = None, param_vals = None, filepath = None):
 
     d = 1
     wGB = 0.0400
-    wGA =0.# -0.0400/wAB
+    wGA =0#-0.0400/4
     wGA2 = 0.0
 
     rectification_BC = False
@@ -82,7 +76,7 @@ def make_params(param_names = None, param_vals = None, filepath = None):
     slope_n = 1
     threshold_n = 0.0
 
-    plastic_to_G = 0
+    plastic_to_G = 1
     plastic_to_A = 1
     krecB = 1.  #0.78# 2.0
     krelB = .5  #0.64# 2.0
@@ -91,7 +85,7 @@ def make_params(param_names = None, param_vals = None, filepath = None):
 
     krecA = 1. # 3#0.066#2.#35.66#2.0
     krelA = .5 # 6#0.0015#2.#0.54
-    betaA =0.# 0.03 # 0.03#.0.04 #0.2#0.5# 0.03#0.3#2#1#.3#0.1#.300 #1360.0
+    betaA =0.0 # 0.03 # 0.03#.0.04 #0.2#0.5# 0.03#0.3#2#1#.3#0.1#.300 #1360.0
 
 
     krecA2 = .1 #3#0.066#2.#35.66#2.0

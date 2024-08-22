@@ -13,15 +13,7 @@ import sys as syt
 script to loop over values for one parameter and simulate  model respons eto different speeds
 '''
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-net_name = f'fb_thesis_linear_pastic_tes1'
-=======
-net_name = f'fb_thesis_linear_test'
->>>>>>> Stashed changes
-=======
-net_name = f'fb_thesis_linear_pastic_tes3'
->>>>>>> Stashed changes
+net_name = f'fb_linear_test'
 
 
 # Simulate response to impule to show model STA
@@ -32,7 +24,6 @@ start = time.time()
 
 stim_name = stim_type
 params_name = 'params'
-filepath = f'~/Documents/Simulations/motion_anticipation_network/{net_name}'
 
 home = os.path.expanduser("~")
 filepath = f'{home}/Documents/Simulations/motion_anticipation_network/{net_name}'

@@ -31,10 +31,11 @@ else:
 label2 = f'{param} = {val}'
 
 save = True
+stim_type = 'smooth'
 #print(fp)
 
 # load params
-with open(f'{fp1}/out', 'rb') as handle:
+with open(f'{fp1}/out_{stim_type}', 'rb') as handle:
     out = pickle.load(handle)
 
 with open(f'{fp1}/params', 'rb') as handle:
