@@ -255,8 +255,8 @@ def run_Reciporcal(params, filepath = None, save_one = True, measure_n = False, 
     onset_RG = measure_onset_anticipation( RG[middle_cell_GC,:])
     onset_RB = measure_onset_anticipation( RB[middle_cell_GC,:])
 
-    nmin_B = np.min(OB[middle_cell_BC,:])
-    nmin_A = np.min(OA[middle_cell_BC,:])
+    nmin_B = np.min(OB[middle_cell_BC,:-1])
+    nmin_A = np.min(OA[middle_cell_BC,:-1])
     if measure_n is True:
         return [max_RG,max_RB,max_drive,params['tps_rf_GC_mid'][middle_cell_GC], onset_RG,onset_RB,RG[middle_cell_GC,:],RB[middle_cell_GC,:],nmin_B,nmin_A]
     else:

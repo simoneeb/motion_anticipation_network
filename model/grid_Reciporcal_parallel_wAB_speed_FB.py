@@ -12,24 +12,20 @@ import sys
 
 from utils import measure_onset_anticipation
 
-
-
 net_name = f'fb_linear'
 
 stim_type = 'smooth'
 
 # loop over parameter
-n_params = 30
+n_params = 50
 vals2 = np.linspace(1,81,n_params)
 vals2 = np.linspace(1,101,n_params) *46.0
-vals2 = np.linspace(1,31,n_params) 
+vals2 = np.linspace(1,51,n_params) 
 
 speeds = [0.2,0.23,0.25,0.27,0.3,0.32,0.35,0.37,0.4,0.42,0.45,0.47,0.5]
-#speeds = [0.1,0.4,0.7,1.0,2.0]
-speeds = np.asarray([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2.0])
-speeds = np.arange(0.1,2.0,0.05)
-#speeds = speeds[::2]
-# speeds = [0.5,0.8]
+speeds = np.asarray([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9])
+speeds = np.asarray([0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9])
+
 nb_jobs = len(vals2)*len(speeds)
 dur = (nb_jobs*11.5)/60
 print(f'nb jobs :  {nb_jobs}, takes {dur} mins')
@@ -67,9 +63,9 @@ def run(val2,si):
 
     params = make_params(['speed'],[si])
     params['wAB'] = 10.
-    params['wGA'] = 0.0
+    params['wGA'] = 0.004
     
-    wAB=  params['wBA']
+    wAB=  params['wAB']
     wGA=  params['wGA']
 
     # tauTOT = np.round(val1,2)
@@ -160,13 +156,14 @@ filepath = f'{home}/Documents/Simulations/motion_anticipation_network/{net_name}
 if not os.path.isdir(filepath):
     os.makedirs(filepath)
 
-df.to_csv(f'{filepath}/anticipation_data_wAB_zoom.csv')
-dfresRG.to_csv(f'{filepath}/responses_RG_wAB_zoom.csv')
-dfresRB.to_csv(f'{filepath}/responses_RB_wAB_zoom.csv')
+df.to_csv(f'{filepath}/anticipation_data_wAB_ff.csv')
+dfresRG.to_csv(f'{filepath}/responses_RG_wAB_ff.csv')
+dfresRB.to_csv(f'{filepath}/responses_RB_wAB_ff.csv')
 
 stop = time.time()
 params = X[-1][-1]
-with open(f'{filepath}/params_grid_wAB_zoom', 'wb') as handle:
+
+with open(f'{filepath}/params_grid_wAB_ff', 'wb') as handle:
             pickle.dump(params, handle)
 
 

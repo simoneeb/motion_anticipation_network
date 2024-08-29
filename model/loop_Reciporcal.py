@@ -12,12 +12,12 @@ TODO : paralellize
 '''
 
 
-net_name = f'fb_linear_test'
+net_name = f'fb_linear'
 
 stim_type = 'smooth'
 
-param = 'wBA'                           # parameter to loop over
-vals =[46.] #[46.0]               # values to test 
+param = 'krecA'                           # parameter to loop over
+vals =[.0] #[46.0]               # values to test 
 #vals =[-0.0005,-0.0007] #[46.0]        # values to test 
 
 speeds = [0.14,0.42,0.7,0.98,1.96]
@@ -27,6 +27,8 @@ speeds = np.asarray([0.1,0.2,0.3,0.4,0.4,0.5,0.6,0.7,0.8,0.9,1.0,2.0,1.1,1.2,1.3
 speeds = speeds[::2]
 start = time.time()
 
+
+
 for val in vals:
     val = np.round(val,4)
     params_name = f'{param}/{param}_{val}'
@@ -35,7 +37,9 @@ for val in vals:
     home = os.path.expanduser("~")
     filepath = f'{home}/Documents/Simulations/motion_anticipation_network/{net_name}'
     params = load_params(filepath,'params')
-
+    params['betaA'] = 0.0
+    params['wBA'] = 50.0
+    params['wAB'] = 10.0
     if not os.path.isdir(filepath):
         os.makedirs(filepath)
 
@@ -59,7 +63,6 @@ for val in vals:
 
 
     os.system(f'python plot_codes/plot_speeds_auto_one.py {filepath} {stim_type} {param} {val}')
-
 
 
 

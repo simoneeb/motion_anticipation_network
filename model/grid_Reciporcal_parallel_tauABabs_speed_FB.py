@@ -90,7 +90,6 @@ def run(val2,si):
     tauA = 1/(-x+1/tauB)
     tauA = np.round(tauA,2)
 
-    print(tauA,tauB)
     tauTOT = 1/tauA - 1/tauB
     # wBA = wTOT/wAB
 

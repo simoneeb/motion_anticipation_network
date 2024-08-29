@@ -13,28 +13,24 @@ def calc_n_f(krel,krec,bet,frec):
     return krec/(krec+krel*bet*frec)
 
 
-
 #loop over parameter
 krel = 1.
-krec = .5
+krec = .1
 # range of beta
 #speeds = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,1.0,2.0]
 #speeds = [0.1,0.4,0.7,1.0,2.0]
 
-
-
-
-
 #loop over tau-n
 #vals = np.arange(0.0001,0.001,.0002)
 vals = [0.001,0.002,0.003,0.004,0.005,0.006,0.007,0.008,0.009,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1]
-#vals = [0.001,0.6,1]
+vals = np.arange(0,30,2)
+# vals = vals[0:2]
 # vals = [0.0,0.001,0.002,0.003,0.004,0.005,0.006,0.007,0.008,0.009,0.01,0.012,0.015,0.017,0.02,0.025,0.03,0.035,0.04,0.045,0.05,0.055,0.6,0.065,0.07,0.075,0.08,0.085,0.09,0.095,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,1.1,1.2,1.3,1.4,1.5]
 # vals = [0.0,0.001,0.002]
 
 #vals = [0.01,0.05,0.1,0.5,0.6,1,2,5,10]
 net_name = f'Reciporcal_mono_linear_heavy_maxan_equalweight/noGCGainControl'
-net_name = f'fb_thesis_linear'
+net_name = f'fb_linear'
 stim_type = 'smooth'
 
 
@@ -82,7 +78,7 @@ def run(val,si):
     ncalc = calc_n_f(krec,krel,beta,si)
 
 
-    params = make_params(param_names = ['speed','krecB','krelB','betaB','wGA','wBA','plastic_to_G','plastic_to_A'], param_vals=[si,krec,krel,beta,0.0,46.0,0,1])
+    params = make_params(param_names = ['speed','krecB','krelB','betaB','wGA','wBA','plastic_to_G','plastic_to_A'], param_vals=[si,krec,krel,beta,0.0,50.0,0,1])
 
     [peak_RG,peak_RB,peak_drive,tp_rf_GC_mid,onset_RG,onset_RB,RG,RB,nmin_B, nmin_A] = run_Reciporcal(params = params, measure_n=True)   
 
@@ -149,13 +145,14 @@ filepath = f'{home}/Documents/Simulations/motion_anticipation_network/{net_name}
 if not os.path.isdir(filepath):
     os.makedirs(filepath)
 
-df.to_csv(f'{filepath}/anticipation_data_tauNB_in.csv')
-dfresRG.to_csv(f'{filepath}/responses_RG_tauNB_in.csv')
-dfresRB.to_csv(f'{filepath}/responses_RB_tauNB_in.csv')
+df.to_csv(f'{filepath}/anticipation_data_tauNB_inr.csv')
+print('saved')
+dfresRG.to_csv(f'{filepath}/responses_RG_tauNB_inr.csv')
+dfresRB.to_csv(f'{filepath}/responses_RB_tauNB_inr.csv')
 
 stop = time.time()
 params = X[-1][-1]
-with open(f'{filepath}/params_grid_tauNB_in', 'wb') as handle:
+with open(f'{filepath}/params_grid_tauNB_inr', 'wb') as handle:
             pickle.dump(params, handle)
 
 
