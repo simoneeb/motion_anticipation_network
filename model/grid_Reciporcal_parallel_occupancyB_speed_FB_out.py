@@ -166,6 +166,5 @@ with open(f'{filepath}/params_grid_tauNB_out', 'wb') as handle:
             pickle.dump(params, handle)
 
 
-
 print('Elapsed time for the entire processing: {:.2f} s'
       .format(stop - start))

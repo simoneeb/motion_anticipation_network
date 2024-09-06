@@ -124,8 +124,8 @@ inp = stimulus_maker.F()                         # simulate input to dynamical s
 # run simulations of all speeds for one parameterset and retrun error 
 def run_one_pset(pset):
 
-    #pset = np.exp(pset) *scales                                            # create parameter values 
-    pset = pset *scales                                            # create parameter values 
+    #pset = np.exp(pset) *scales                                           # create parameter values 
+    pset = pset *scales                                                    # create parameter values 
     paramss = modify_params(params,paramis,pset)                           # modify params 
     # TODO error temporal STA profile
 

@@ -134,9 +134,6 @@ def run(val2,si):
             'onset_RG' : onset_RG,
             'onset_RB' : onset_RB}
     
-    
-  
-    
     return [data,RG,RB]
 
 
@@ -178,9 +175,11 @@ filepath = f'{home}/Documents/Simulations/motion_anticipation_network/{net_name}
 if not os.path.isdir(filepath):
     os.makedirs(filepath)
 
+
 df.to_csv(f'{filepath}/anticipation_data_tauABrel.csv')
 dfresRG.to_csv(f'{filepath}/responses_RG_tauABrel.csv')
 dfresRB.to_csv(f'{filepath}/responses_RB_tauABrel.csv')
+
 
 stop = time.time()
 params = X[-1][-1]
