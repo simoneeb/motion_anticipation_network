@@ -12,17 +12,18 @@ TODO : paralellize
 '''
 
 
-net_name = f'fb_linear'
+net_name = f'ff_linear'
 
 stim_type = 'smooth'
 
-param = 'krecA'                           # parameter to loop over
-vals =[.0] #[46.0]               # values to test 
+param = 'wGA'                           # parameter to loop over
+vals=np.append(0.,np.round(np.logspace(.1,1,10)/100,4)) #[46.0]               # values to test 
+# vals = np.arange(0.03,0.14,0.01)
+
+# vals =[.0,0.001,0.004,0.01,0.] #[46.0]               # values to test 
+
 #vals =[-0.0005,-0.0007] #[46.0]        # values to test 
 
-speeds = [0.14,0.42,0.7,0.98,1.96]
-speeds = [0.1,0.2,0.3,0.4,0.4,0.5,0.6,0.7,0.8,0.9,1.0,2.0]
-speeds = np.asarray([1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9])
 speeds = np.asarray([0.1,0.2,0.3,0.4,0.4,0.5,0.6,0.7,0.8,0.9,1.0,2.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9])
 speeds = speeds[::2]
 start = time.time()
@@ -38,7 +39,7 @@ for val in vals:
     filepath = f'{home}/Documents/Simulations/motion_anticipation_network/{net_name}'
     params = load_params(filepath,'params')
     params['betaA'] = 0.0
-    params['wBA'] = 50.0
+    params['wBA'] = 0.0
     params['wAB'] = 10.0
     if not os.path.isdir(filepath):
         os.makedirs(filepath)
@@ -50,16 +51,11 @@ for val in vals:
 
         #filepath = f'/Users/simone/Documents/Simulations/motion_anticipation_network/Loops/{net_name}'
         print(f'speed = {si}')
-        #params = make_params(param_names = ['speed',param], param_vals=[si,val], filepath= f'{filepath}/{params_name}/{stim_name}')
-     
-        params = modify_params(params, param_names= ['speed',param], values=[si,val])
+        params = make_params(param_names = ['speed',param], param_vals=[si,val], filepath= f'{filepath}/{params_name}/{stim_name}')
         ant_space = run_Reciporcal(params = params, filepath =f'{filepath}/{params_name}/{stim_name}', save_one = True,stim_type=stim_type)  
 
-
-        os.system(f'python plot_codes/plot_Reciporcal_one.py {filepath}/{param} {param} {val} {stim_name}')
-
-    ant_space = run_Reciporcal(params = params, filepath =f'{filepath}/{params_name}', save_one = True, stim_type='impulse')  
-    ant_space = run_Reciporcal(params = params, filepath =f'{filepath}/{params_name}', save_one = True, stim_type='step')  
+    # ant_space = run_Reciporcal(params = params, filepath =f'{filepath}/{params_name}', save_one = True, stim_type='impulse')  
+    # ant_space = run_Reciporcal(params = params, filepath =f'{filepath}/{params_name}', save_one = True, stim_type='step')  
 
 
     os.system(f'python plot_codes/plot_speeds_auto_one.py {filepath} {stim_type} {param} {val}')

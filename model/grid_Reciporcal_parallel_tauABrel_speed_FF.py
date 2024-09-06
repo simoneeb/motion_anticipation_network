@@ -14,7 +14,7 @@ from utils import measure_onset_anticipation
 
 
 
-net_name = f'fb_linear'
+net_name = f'ff_linear'
 
 stim_type = 'smooth'
 
@@ -76,8 +76,8 @@ def run(val2,si):
 
     params = make_params(['speed'],[si])
     params['wBA'] = 10.0
-    params['wAB'] = 10.0
-    params['wGA'] = 0.0
+    params['wAB'] = 0.0
+    params['wGA'] = 0.0126
     
     wBA=  params['wBA']
     wAB=  params['wAB']
@@ -134,8 +134,6 @@ def run(val2,si):
             'onset_RG' : onset_RG,
             'onset_RB' : onset_RB}
     
-    
-  
     
     return [data,RG,RB]
 

@@ -84,7 +84,7 @@ def run_Reciporcal(params, filepath = None, save_one = True, measure_n = False, 
 
     W_GG = connecter.weight_matrix_i_to_i(-1/params['tauG'],params['nb_GC_cells'])      # timeconstants G
     W_outB = connecter.weight_matrix_pooling(params['wGB'])                             # pooling over B
-    W_outA = connecter.weight_matrix_pooling(params['wGA'])                             # pooling over A
+    W_outA = connecter.weight_matrix_pooling(-1*params['wGA'])                             # pooling over A
 
 
     W_ActB = connecter.weight_matrix_i_to_i(-1/params['tauActB'],params['nb_cells'])    # time constant of activity decrease of for Gain Control in B

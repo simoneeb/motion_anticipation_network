@@ -13,7 +13,7 @@ import sys as syt
 script to loop over values for one parameter and simulate  model respons eto different speeds
 '''
 
-net_name = f'fb_linear_test'
+net_name = f'ff_linear'
 
 
 # Simulate response to impule to show model STA
