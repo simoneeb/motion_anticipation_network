@@ -14,7 +14,7 @@ from utils import measure_onset_anticipation
 
 
 
-net_name = f'fb_linear'
+net_name = f'fb_linear_600'
 
 stim_type = 'smooth'
 

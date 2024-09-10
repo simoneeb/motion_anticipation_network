@@ -12,15 +12,17 @@ TODO : paralellize
 '''
 
 
-net_name = f'ff_linear'
+net_name = f'fb_linear_600'
 
 stim_type = 'smooth'
 
-param = 'wGA'                           # parameter to loop over
-vals=np.append(0.,np.round(np.logspace(.1,1,10)/100,4)) #[46.0]               # values to test 
+param = 'wBA'                           # parameter to loop over
+# vals=np.append(0.,np.round(np.logspace(.1,1,10)/100,4)) #[46.0]               # values to test 
+vals =np.array([1.,3.,5.,15.,20.,30.]) #[46.0]        # values to test 
+
 # vals = np.arange(0.03,0.14,0.01)
 
-# vals =[.0,0.001,0.004,0.01,0.] #[46.0]               # values to test 
+# vals =[.0,10.0] #[46.0]               # values to test 
 
 #vals =[-0.0005,-0.0007] #[46.0]        # values to test 
 
@@ -39,7 +41,8 @@ for val in vals:
     filepath = f'{home}/Documents/Simulations/motion_anticipation_network/{net_name}'
     params = load_params(filepath,'params')
     params['betaA'] = 0.0
-    params['wBA'] = 0.0
+    params['wGA'] = 0.0
+    # params['wBA'] = 10.0
     params['wAB'] = 10.0
     if not os.path.isdir(filepath):
         os.makedirs(filepath)
@@ -54,8 +57,8 @@ for val in vals:
         params = make_params(param_names = ['speed',param], param_vals=[si,val], filepath= f'{filepath}/{params_name}/{stim_name}')
         ant_space = run_Reciporcal(params = params, filepath =f'{filepath}/{params_name}/{stim_name}', save_one = True,stim_type=stim_type)  
 
-    # ant_space = run_Reciporcal(params = params, filepath =f'{filepath}/{params_name}', save_one = True, stim_type='impulse')  
-    # ant_space = run_Reciporcal(params = params, filepath =f'{filepath}/{params_name}', save_one = True, stim_type='step')  
+    ant_space = run_Reciporcal(params = params, filepath =f'{filepath}/{params_name}', save_one = True, stim_type='impulse')  
+    ant_space = run_Reciporcal(params = params, filepath =f'{filepath}/{params_name}', save_one = True, stim_type='step')  
 
 
     os.system(f'python plot_codes/plot_speeds_auto_one.py {filepath} {stim_type} {param} {val}')

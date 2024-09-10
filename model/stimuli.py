@@ -199,7 +199,7 @@ class stim_moving_object_for_2D_net(object):
         return self.barstim
     
     #make impulse stimulus
-    def impulse_stimulus(self,length = 1.,impulse_timepoint = 0, amplitude = 1):
+    def impulse_stimulus(self,length = 1.5,impulse_timepoint = 0, amplitude = 1):
 
 
         self.tps = int(length/self.dt)

@@ -12,8 +12,8 @@ def make_params(param_names = None, param_vals = None, filepath = None):
 
 
     # define parameter
-    nb_cells = 300#450
-    nb_GC_cells = 300# 450
+    nb_cells = 500#450
+    nb_GC_cells = 600# 450
     saving_range = 50
     rf_GC = 0.065*6 # 0.09s
     rf_GC_s = 0.485*6 # 0.09s
@@ -50,7 +50,7 @@ def make_params(param_names = None, param_vals = None, filepath = None):
     input_scale = 1.#0.1 #0.1 #5.#0.1#0.025#5# 800#459#800
 
     wAB = 10. #30.#46.#10.#22.   # 10.#44. #= RAM mono linear fitted to ACM   # RAM fitted to ACM = 22
-    wBA = 0.#50. #46.#10.#31.#46.#46. # 46.# 31.#31. #= RAM mono linear fitted to ACM   # RAM fitted to ACM = 31
+    wBA = 10.#50. #46.#10.#31.#46.#46. # 46.# 31.#31. #= RAM mono linear fitted to ACM   # RAM fitted to ACM = 31
 
     wA2B = 0.#46.
     wA2A = 0. #46.0

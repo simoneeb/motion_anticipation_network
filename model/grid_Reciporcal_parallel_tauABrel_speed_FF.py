@@ -12,7 +12,7 @@ import sys
 
 from utils import measure_onset_anticipation
 
-net_name = f'ff_linear'
+net_name = f'ff_linear_600'
 
 stim_type = 'smooth'
 
