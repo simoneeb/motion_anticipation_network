@@ -12,14 +12,15 @@ TODO : paralellize
 '''
 
 
-net_name = f'fb_linear_dt'
+net_name = f'fb_linear'
 
 stim_type = 'smooth'
 
 param = 'wBA'                           # parameter to loop over
 
-vals =np.array([1.,3.,5.,15.,20.,30.]) #[values for wBA in feedback 
 vals =np.array([15.]) #[values for wBA in feedback 
+vals =np.array([0.,1.,3.,5.,10.,15.,20.,30.]) #[46.0]        # values to test 
+
 # vals =np.append(0.,np.round(np.logspace(.1,1,10)/100,4)) #values for wGA in feedforward
 
 # large speed range studied in experiments
@@ -59,7 +60,7 @@ for val in vals:
         #filepath = f'/Users/simone/Documents/Simulations/motion_anticipation_network/Loops/{net_name}'
         print(f'speed = {si}')
         params = make_params(param_names = ['speed',param], param_vals=[si,val], filepath= f'{filepath}/{params_name}/{stim_name}')
-        ant_space = run_Reciporcal(params = params, filepath =f'{filepath}/{params_name}/{stim_name}', save_one = True,stim_type=stim_type)  
+        # ant_space = run_Reciporcal(params = params, filepath =f'{filepath}/{params_name}/{stim_name}', save_one = True,stim_type=stim_type)  
 
     ant_space = run_Reciporcal(params = params, filepath =f'{filepath}/{params_name}', save_one = True, stim_type='impulse')  
     ant_space = run_Reciporcal(params = params, filepath =f'{filepath}/{params_name}', save_one = True, stim_type='step')  

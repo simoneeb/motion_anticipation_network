@@ -26,7 +26,7 @@ def make_params(param_names = None, param_vals = None, filepath = None):
     std_GC_s = rf_GC_s/6
 
     spacing = 0.005  
-    dt = 0.0005#1/40# 0.001
+    dt = 0.001#1/40# 0.001
 
 
     speed = 0.81 
