@@ -12,7 +12,7 @@ TODO : paralellize
 '''
 
 
-net_name = f'fb_linear_600'
+net_name = f'ff_linear_600'
 
 stim_type = 'smooth'
 

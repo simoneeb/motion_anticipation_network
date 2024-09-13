@@ -12,7 +12,7 @@ import sys
 
 from utils import measure_onset_anticipation
 
-net_name = f'ff_linear_600'
+net_name = f'ff_linear'
 
 stim_type = 'smooth'
 
@@ -71,8 +71,8 @@ grid = np.array(np.meshgrid(vals2,speeds)).T.reshape(-1,2)
 def run(val2,si):
 
     params = make_params(['speed'],[si])
-    params['wBA'] = 10.0
-    params['wAB'] = 0.0
+    params['wBA'] = 0.0
+    params['wAB'] = 10.0
     params['wGA'] = 0.0126
     
     wBA=  params['wBA']
@@ -84,9 +84,9 @@ def run(val2,si):
     # wTOT = np.round(val2,2)
     
     x = np.round(val2,4)
-    tauA =  0.15
-    # tauA = np.round(1/(-x+1/tauB),4)
-    tauB = np.round(-1/(-x+1/tauA),4)
+    # tauA =  0.15
+    tauA = np.round(1/(-x+1/tauB),4)
+    # tauB = np.round(-1/(-x+1/tauA),4)
 
 
     tauTOT = 1/tauA - 1/tauB
@@ -173,13 +173,13 @@ filepath = f'{home}/Documents/Simulations/motion_anticipation_network/{net_name}
 if not os.path.isdir(filepath):
     os.makedirs(filepath)
 
-df.to_csv(f'{filepath}/anticipation_data_tauBrel.csv')
-dfresRG.to_csv(f'{filepath}/responses_RG_tauBrel.csv')
-dfresRB.to_csv(f'{filepath}/responses_RB_tauBrel.csv')
+df.to_csv(f'{filepath}/anticipation_data_tauABrel.csv')
+dfresRG.to_csv(f'{filepath}/responses_RG_tauABrel.csv')
+dfresRB.to_csv(f'{filepath}/responses_RB_tauABrel.csv')
 
 stop = time.time()
 params = X[-1][-1]
-with open(f'{filepath}/params_grid_tauBrel', 'wb') as handle:
+with open(f'{filepath}/params_grid_tauABrel', 'wb') as handle:
             pickle.dump(params, handle)
 
 

@@ -12,22 +12,26 @@ TODO : paralellize
 '''
 
 
-net_name = f'fb_linear_600'
+net_name = f'fb_linear_dt'
 
 stim_type = 'smooth'
 
 param = 'wBA'                           # parameter to loop over
-# vals=np.append(0.,np.round(np.logspace(.1,1,10)/100,4)) #[46.0]               # values to test 
-vals =np.array([1.,3.,5.,15.,20.,30.]) #[46.0]        # values to test 
 
-# vals = np.arange(0.03,0.14,0.01)
+vals =np.array([1.,3.,5.,15.,20.,30.]) #[values for wBA in feedback 
+vals =np.array([15.]) #[values for wBA in feedback 
+# vals =np.append(0.,np.round(np.logspace(.1,1,10)/100,4)) #values for wGA in feedforward
 
-# vals =[.0,10.0] #[46.0]               # values to test 
+# large speed range studied in experiments
+# speeds = np.asarray([0.1,0.2,0.3,0.4,0.4,0.5,0.6,0.7,0.8,0.9,1.0,2.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9])
+# speeds = speeds[::2]
 
-#vals =[-0.0005,-0.0007] #[46.0]        # values to test 
-
-speeds = np.asarray([0.1,0.2,0.3,0.4,0.4,0.5,0.6,0.7,0.8,0.9,1.0,2.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9])
+# slow speed range
+speeds = np.arange(0.01,0.1,0.01)
 speeds = speeds[::2]
+
+# speeds = np.asarray([0.05,0.06,0.07,0.12,0.14,0.16])
+
 start = time.time()
 
 

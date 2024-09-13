@@ -61,7 +61,7 @@ def run_Reciporcal(params, filepath = None, save_one = True, measure_n = False, 
     #_ = stimulus_maker.load_filter()
     tkern = stimulus_maker.filter_biphasic_norm()
 
-    _,inp = stimulus_maker.OPL()                        # simulate OPS response
+    spat,inp = stimulus_maker.OPL()                        # simulate OPS response
     F_inp = stimulus_maker.F()                          # Simulate in put into dynamical system
  
     if filepath is not None:
@@ -233,6 +233,7 @@ def run_Reciporcal(params, filepath = None, save_one = True, measure_n = False, 
             'RG' : RG[middle_cell_GC,:],
             # 'PVA': PVA,
             'inp': inp[middle_cell_GC,:],
+            'spat': spat[middle_cell_GC,:],
             'F':F_inp[middle_cell_GC,:],
                 }
 
