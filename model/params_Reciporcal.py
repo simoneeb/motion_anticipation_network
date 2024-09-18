@@ -41,7 +41,7 @@ def make_params(param_names = None, param_vals = None, filepath = None):
     w_BC = 0.4 # 0.5 ??????????
     w_GC = 0.0 # 0.5
 
-    tauA = 0.15 #0.156 #0.218 #= RAM mono linear fitted to ACM   # RAM fitted to ACM  = 0.156  
+    tauA =  0.15# 0.15 #0.156 #0.218 #= RAM mono linear fitted to ACM   # RAM fitted to ACM  = 0.156  
     tauA2 = 0.3   #0.017
     tauB = 0.08  #0.01
     tauG = 0.01   # 0.01  #0.01
@@ -52,7 +52,7 @@ def make_params(param_names = None, param_vals = None, filepath = None):
     input_scale = 1.#0.1 #0.1 #5.#0.1#0.025#5# 800#459#800
 
     wAB = 10. #30.#46.#10.#22.   # 10.#44. #= RAM mono linear fitted to ACM   # RAM fitted to ACM = 22
-    wBA = 10.#10.#50. #46.#10.#31.#46.#46. # 46.# 31.#31. #= RAM mono linear fitted to ACM   # RAM fitted to ACM = 31
+    wBA = 0.#10.#10.#50. #46.#10.#31.#46.#46. # 46.# 31.#31. #= RAM mono linear fitted to ACM   # RAM fitted to ACM = 31
 
     wA2B = 0.#46.
     wA2A = 0. #46.0
@@ -61,7 +61,7 @@ def make_params(param_names = None, param_vals = None, filepath = None):
 
     d = 1
     wGB = 0.0400
-    wGA = 0.#0.0126 #-0.0400/4
+    wGA = 0.0126 #-0.0400/4
     wGA2 = 0.0
 
     rectification_BC = False

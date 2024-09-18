@@ -12,16 +12,16 @@ TODO : paralellize
 '''
 
 
-net_name = f'fb_linear'
+net_name = f'ff_linear'
 
 stim_type = 'smooth'
 
-param = 'wBA'                           # parameter to loop over
+param = 'wGA'                           # parameter to loop over
 
-vals =np.array([15.]) #[values for wBA in feedback 
-vals =np.array([0.,1.,3.,5.,10.,15.,20.,30.]) #[46.0]        # values to test 
+# vals =np.array([15.]) #[values for wBA in feedback 
+# vals =np.array([0.,1.,3.,5.,10.,15.,20.,30.]) #[46.0]        # values to test 
 
-# vals =np.append(0.,np.round(np.logspace(.1,1,10)/100,4)) #values for wGA in feedforward
+vals =np.append(0.,np.round(np.logspace(.1,1,10)/100,4)) #values for wGA in feedforward
 
 # large speed range studied in experiments
 # speeds = np.asarray([0.1,0.2,0.3,0.4,0.4,0.5,0.6,0.7,0.8,0.9,1.0,2.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9])
@@ -47,8 +47,8 @@ for val in vals:
     params = load_params(filepath,'params')
     params['betaA'] = 0.0
     params['wGA'] = 0.0
-    # params['wBA'] = 10.0
-    params['wAB'] = 10.0
+    params['wBA'] = 0.0
+    # params['wAB'] = 10.0
     if not os.path.isdir(filepath):
         os.makedirs(filepath)
 

@@ -12,7 +12,7 @@ import sys
 
 from utils import measure_onset_anticipation
 
-net_name = f'fb_linear_600'
+net_name = f'fb_linear'
 
 stim_type = 'smooth'
 
@@ -156,14 +156,14 @@ filepath = f'{home}/Documents/Simulations/motion_anticipation_network/{net_name}
 if not os.path.isdir(filepath):
     os.makedirs(filepath)
 
-df.to_csv(f'{filepath}/anticipation_data_wAB.csv')
-dfresRG.to_csv(f'{filepath}/responses_RG_wAB.csv')
-dfresRB.to_csv(f'{filepath}/responses_RB_wAB.csv')
+df.to_csv(f'{filepath}/anticipation_data_wAB_tauA02.csv')
+dfresRG.to_csv(f'{filepath}/responses_RG_wAB_tauA02.csv')
+dfresRB.to_csv(f'{filepath}/responses_RB_wAB_tauA02.csv')
 
 stop = time.time()
 params = X[-1][-1]
 
-with open(f'{filepath}/params_grid_wAB', 'wb') as handle:
+with open(f'{filepath}/params_grid_wAB_tauA02', 'wb') as handle:
             pickle.dump(params, handle)
 
 

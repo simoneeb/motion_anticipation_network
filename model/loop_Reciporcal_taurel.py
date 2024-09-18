@@ -12,7 +12,7 @@ TODO : paralellize
 '''
 
 
-net_name = f'ff_linear_600'
+net_name = f'ff_linear'
 
 stim_type = 'smooth'
 
@@ -56,7 +56,7 @@ for val in vals:
         params = make_params(param_names = ['speed',param], param_vals=[si,val], filepath= f'{filepath}/{params_name}/{stim_name}')
      
         params = modify_params(params, param_names= ['speed',param,'tauB'], values=[si,tauA,tauB])
-        ant_space = run_Reciporcal(params = params, filepath =f'{filepath}/{params_name}/{stim_name}', save_one = True,stim_type=stim_type)  
+        # ant_space = run_Reciporcal(params = params, filepath =f'{filepath}/{params_name}/{stim_name}', save_one = True,stim_type=stim_type)  
 
 
         os.system(f'python plot_codes/plot_Reciporcal_one.py {filepath}/{param} {param} {tauA} {stim_name}')
