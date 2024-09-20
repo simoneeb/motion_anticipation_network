@@ -163,71 +163,40 @@ class plotting(object):
 
         return anti,maxi
 
+
+    def plot_one_GC(self,CELL, ax,label = '',y = 'time',response = 'RG', alpha = 1, linestyle = '-', color = 'k', linewidth = 3,middlecrossing_at_0 = False):
+
+        if y == 'time':
+            if middlecrossing_at_0 == True:
+                item = ax.plot((self.time - self.tps_rf_GC_mid[CELL])*1000,self.out[response], label = label, alpha = alpha, color = color, linestyle = linestyle, linewidth = linewidth)
+                ax.axvline(0,linestyle = ':', color = item[0].get_color(), alpha = 1, linewidth = linewidth) 
+
+            else:
+                item = ax.plot(self.time*1000 ,self.out[response], label = label, alpha = alpha, color = color, linestyle = linestyle, linewidth = linewidth)
+                ax.axvline(self.tps_rf_GC_mid[CELL]*1000,linestyle = ':', color = item[0].get_color(), alpha = 1, linewidth = linewidth) 
+
+
+        if y == 'space':
+            if middlecrossing_at_0 == True:
+                item = ax.plot(np.asarray(self.time*self.speed) - self.pos_rf_GC_mid[CELL],self.out[response], label = label, alpha = alpha, color = color, linestyle = linestyle, linewidth = linewidth)
+                ax.axvline(0,linestyle = ':', color = item[0].get_color(), alpha = 1, linewidth = linewidth) 
+
+            else:
+                item = ax.plot(np.asarray(self.time*self.speed) ,self.out[response], label = label, alpha = alpha, color = color, linestyle = linestyle, linewidth = linewidth)
+                ax.axvline(self.pos_rf_GC_mid[CELL],linestyle = ':', color = item[0].get_color(), alpha = 1, linewidth = linewidth) 
+
+
+        if y == 'neural image':
+
+            res = np.flip(self.out[response])
+            pos = (self.time*self.speed) - self.pos_rf_GC_mid[CELL]
+
+            item = ax.plot(pos,res, label = label, alpha = alpha, linestyle = linestyle,color = color, linewidth = linewidth)
+            ax.axvline(pos[res.argmax()],linestyle = linestyle, color = item[0].get_color(), alpha = alpha, linewidth = linewidth ) 
+
     
 
-    def plot_one_GC(self,CELL, ax,label = '',y = 'time',response = 'RG',save_one = False, alpha = 1, linestyle = '-', color = 'k', linewidth = 3,middlecrossing_at_0 = False):
-
-        if save_one:
-            if y == 'time':
-                if middlecrossing_at_0 == True:
-                    item = ax.plot((self.time - self.tps_rf_GC_mid[CELL])*1000,self.out[response], label = label, alpha = alpha, color = color, linestyle = linestyle, linewidth = linewidth)
-                    ax.axvline(0,linestyle = ':', color = item[0].get_color(), alpha = 1, linewidth = linewidth) 
-
-                else:
-                    item = ax.plot(self.time*1000 ,self.out[response], label = label, alpha = alpha, color = color, linestyle = linestyle, linewidth = linewidth)
-                    ax.axvline(self.tps_rf_GC_mid[CELL]*1000,linestyle = ':', color = item[0].get_color(), alpha = 1, linewidth = linewidth) 
-
-
-            if y == 'space':
-                if middlecrossing_at_0 == True:
-                    item = ax.plot(np.asarray(self.time*self.speed) - self.pos_rf_GC_mid[CELL],self.out[response], label = label, alpha = alpha, color = color, linestyle = linestyle, linewidth = linewidth)
-                    ax.axvline(0,linestyle = ':', color = item[0].get_color(), alpha = 1, linewidth = linewidth) 
-
-                else:
-                    item = ax.plot(np.asarray(self.time*self.speed) ,self.out[response], label = label, alpha = alpha, color = color, linestyle = linestyle, linewidth = linewidth)
-                    ax.axvline(self.pos_rf_GC_mid[CELL],linestyle = ':', color = item[0].get_color(), alpha = 1, linewidth = linewidth) 
-
-
-            if y == 'neural image':
-
-                res = np.flip(self.out[response])
-                pos = (self.time*self.speed) - self.pos_rf_GC_mid[CELL]
-
-                item = ax.plot(pos,res, label = label, alpha = alpha, linestyle = linestyle,color = color, linewidth = linewidth)
-                ax.axvline(pos[res.argmax()],linestyle = linestyle, color = item[0].get_color(), alpha = alpha, linewidth = linewidth ) 
-
-        else:
-            if y == 'time':
-                if middlecrossing_at_0 == True:
-                    item = ax.plot((self.time - self.tps_rf_GC_mid[CELL])*1000,self.out[response][CELL], label = label, alpha = alpha, color = color, linestyle = linestyle, linewidth = linewidth)
-                    ax.axvline(0,linestyle = ':', color = item[0].get_color(), alpha = 1, linewidth = linewidth) 
-
-                else:
-                    item = ax.plot(self.time*1000 ,self.out[response][CELL], label = label, alpha = alpha, color = color, linestyle = linestyle, linewidth = linewidth)
-                    ax.axvline(self.tps_rf_GC_mid[CELL]*1000,linestyle = ':', color = item[0].get_color(), alpha = 1, linewidth = linewidth) 
-
-
-            if y == 'space':
-                if middlecrossing_at_0 == True:
-                    item = ax.plot(np.asarray(self.time*self.speed) - self.pos_rf_GC_mid[CELL],self.out[response][CELL], label = label, alpha = alpha, color = color, linestyle = linestyle, linewidth = linewidth)
-                    ax.axvline(0,linestyle = ':', color = item[0].get_color(), alpha = 1, linewidth = linewidth) 
-
-                else:
-                    item = ax.plot(np.asarray(self.time*self.speed) ,self.out[response][CELL], label = label, alpha = alpha, color = color, linestyle = linestyle, linewidth = linewidth)
-                    ax.axvline(self.pos_rf_GC_mid[CELL],linestyle = ':', color = item[0].get_color(), alpha = 1, linewidth = linewidth) 
-
-
-            if y == 'neural image':
-
-                res = np.flip(self.out[response][CELL])
-                pos = (self.time*self.speed) - self.pos_rf_GC_mid[CELL]
-
-                item = ax.plot(pos,res, label = label, alpha = alpha, linestyle = linestyle,color = color, linewidth = linewidth)
-                ax.axvline(pos[res.argmax()],linestyle = linestyle, color = item[0].get_color(), alpha = alpha, linewidth = linewidth ) 
-        # axs[1].plot(self.out['RG'][CELL], alpha = 0.5, color = item[0].get_color())
-        # axs[1].axvline(self.tps_rf_GC_mid[CELL]/self.dt,linestyle = ':', color = item[0].get_color(), alpha = 0.5)
-
-
+    
     def plot_one_stim(self,CELL,ax):
 
         ax.plot(self.time*1000,self.out['inp'][CELL,:], label = f'speed {self.speed}')

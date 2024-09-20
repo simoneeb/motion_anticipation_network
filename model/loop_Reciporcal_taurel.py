@@ -3,7 +3,7 @@ import numpy as np
 import time
 
 from run_Reciporcal import run_Reciporcal
-from params_Reciporcal import make_params, load_params,modify_params
+from model.params_FB import make_params, load_params,modify_params
 
 
 '''

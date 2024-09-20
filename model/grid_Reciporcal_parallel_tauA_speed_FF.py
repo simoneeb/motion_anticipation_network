@@ -3,7 +3,7 @@ import os
 import numpy as np
 from joblib import Parallel,delayed
 from run_Reciporcal import run_Reciporcal
-from params_Reciporcal import make_params
+from model.params_FB import make_params
 import time
 import pandas as pd
 import pickle
@@ -115,8 +115,6 @@ def run(val2,si):
             'onset_RB' : onset_RB}
     
     
-  
-    
     return [data,RG,RB]
 
 
@@ -172,25 +170,4 @@ with open(f'{filepath}/params_grid_tauA', 'wb') as handle:
 print('Elapsed time for the entire processing: {:.2f} s'
       .format(stop - start))
 
-
-# for val in vals:
-#     val = np.round(val,2)
-#     params_name = f'{param}/{param}_{val}'
-#     print(f'{param} = {val}')
-#     # loop over speeds : 
-#     for si in speeds:
-#         stim_name = f'{stim_type}_{si}'
-#         filepath = f'/user/sebert/home/Documents/Simulations/motion/anticipation_1D/Reciporcal/{net_name}'
-#         print(f'speed = {si}')
-#         os.system(f'python params_Reciporcal.py {filepath}/{params_name}/{stim_name} speed {si} {param} {val}')
-#         # # # # #os.system(f'python params.py {filepath}/{params_name}/{stim_name} speed {si} wBA {-1*val} wAB {val}')
-#         os.system(f'python run_Reciporcal.py {filepath}/{params_name}/{stim_name} None')
-#         # os.system(f'python plot_codes/plot_BC_GC_compare.py {filepath}/{param} {param} {val} {stim_name}')
-#         os.system(f'python plot_codes/plot_Reciporcal_one.py {filepath}/{param} {param} {val} {stim_name}')
-    
-#     os.system(f'python plot_codes/plot_speeds_auto_one.py {filepath} {stim_type} {param} {val} ')
-#     # os.system(f'python plot_speeds_auto.py {filepath} {stim_type} {param} {val} ')
-#     # #os.system(f'python plot_pva.py {filepath} {stim_type} {param} {val} ')
-#     # os.system(f'python plot_speeds_gaincontrol_mechanism.py {filepath} {stim_type} {param} {val}')
-#     # #os.system(f'python plot_speeds_lateral_mechanism.py {filepath} {stim_type} {param} {val}')
 

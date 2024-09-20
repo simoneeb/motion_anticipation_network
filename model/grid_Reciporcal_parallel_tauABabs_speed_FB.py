@@ -3,7 +3,7 @@ import os
 import numpy as np
 from joblib import Parallel,delayed
 from run_Reciporcal import run_Reciporcal
-from params_Reciporcal import make_params
+from model.params_FB import make_params
 import time
 import pandas as pd
 import pickle

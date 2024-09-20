@@ -1,41 +1,63 @@
 from stimuli import stim_moving_object_for_2D_net
 from connectivity import connectivity
 from system import system
-from plotting import plotting
 from nonlinearities import N
 from utils  import GainF_B,GainF_G, DOG,measure_onset_anticipation
 import matplotlib.pyplot as plt
 import os
 import numpy as np
 import pickle 
-import json
-import sys as syt
-
 
 
 
 def run_Reciporcal(params, filepath = None, save_one = True, measure_n = False, stim_type = 'smooth',step_stop = None):
     
+   
+   
     """
-    function to run the simulation of a reciprocal amacrine network for a given parameterset
+    runs the simulation of a reciprocal amacrine network for a given parameterset
+
+    params (dict) : parameter of the model
+    filepath (string): directory to store the output in 
+    save_one : if True, the reponse of only the middle cell of the network is saved
+    measure_n : if True, occulancy min is returned
+    stim_type (string) : stimulus to use for the simulation
+    step_stop : if stim_type is 'step', the time st which the step stimulus ends
+
+    returns: 
+
+    max_RG:
+    max_RB:
+    max_drive:
+    params['tps_rf_GC_mid']:
+    [middle_cell_GC]:
+    onset_RG:
+    onset_RB:
+    RG[middle_cell_GC,:]:
+    RB[middle_cell_GC,:]:
+    VG[middle_cell_GC,:]:
+
+
 
 
     """
 
+
+    # create directory to save outputs
     if filepath is not None:
 
         if not os.path.isdir(filepath):
             os.makedirs(filepath)
         if not os.path.isdir(f'{filepath}/plots'):
             os.makedirs(f'{filepath}/plots')
-    #     with open(f'{filepath}/params', 'rb') as handle:
-    #         params = pickle.load(handle)
+
 
     
 
     # create stimulus
     stimulus_maker = stim_moving_object_for_2D_net(params,
                                                     filepath = filepath)
+
 
     if stim_type == 'smooth':
         bar = stimulus_maker.bar_smooth()
@@ -58,35 +80,37 @@ def run_Reciporcal(params, filepath = None, save_one = True, measure_n = False, 
         else:
             bar = stimulus_maker.step_stimulus()
 
-    #_ = stimulus_maker.load_filter()
-    tkern = stimulus_maker.filter_biphasic_norm()
+    #_ = stimulus_maker.load_filter()                      # load filter from data and fit convolution params to it 
+    tkern = stimulus_maker.filter_biphasic_norm()          # make filter based on parameter
 
     spat,inp = stimulus_maker.OPL()                        # simulate OPS response
-    F_inp = stimulus_maker.F()                          # Simulate in put into dynamical system
+    F_inp = stimulus_maker.F()                             # Simulate in put into dynamical system
  
     if filepath is not None:
         stimulus_maker.plot_stim()                      
         stimulus_maker.plot_kernels()
 
 
-    params = stimulus_maker.add_params()                # add additional params
+    params = stimulus_maker.add_params()                # calculate additional params
 
     # create weight matrices
     connecter = connectivity(params,
                             filepath = filepath)
 
+
+    # connectivity matrices
     W_BB = connecter.weight_matrix_i_to_i(-1/params['tauB'],params['nb_cells'])         # timeconstants B
-    W_BA = connecter.weight_matrix_i_to_nn(-1*params['wBA'],params['nb_cells'])         # inputs from amacrine weights
+    W_BA = connecter.weight_matrix_i_to_nn(-1*params['wBA'],params['nb_cells'])         # inputs from amacrines
 
     W_AA = connecter.weight_matrix_i_to_i(-1/params['tauA'],params['nb_cells'])         # timeconstants A
     W_AB = connecter.weight_matrix_i_to_nn(params['wAB'],params['nb_cells'])            # inputs from bipolars
 
-
+    # create pooling matrices
     W_GG = connecter.weight_matrix_i_to_i(-1/params['tauG'],params['nb_GC_cells'])      # timeconstants G
     W_outB = connecter.weight_matrix_pooling(params['wGB'])                             # pooling over B
-    W_outA = connecter.weight_matrix_pooling(-1*params['wGA'])                             # pooling over A
+    W_outA = connecter.weight_matrix_pooling(-1*params['wGA'])                          # pooling over A
 
-
+    # matrices for gain control
     W_ActB = connecter.weight_matrix_i_to_i(-1/params['tauActB'],params['nb_cells'])    # time constant of activity decrease of for Gain Control in B
     W_BtoActB = connecter.weight_matrix_i_to_i(params['hB'],params['nb_cells'])         # stength of gain control
 
@@ -96,6 +120,8 @@ def run_Reciporcal(params, filepath = None, save_one = True, measure_n = False, 
     W_ActG = connecter.weight_matrix_i_to_i(-1/params['tauActG'],params['nb_GC_cells'])  # time constant of activity decrease of for Gain Control in G
     W_GtoActG = connecter.weight_matrix_i_to_i(params['hG'],params['nb_GC_cells'])       # stength of gain control
 
+
+    # matrices for plasticity
     W_krecB = connecter.weight_matrix_i_to_i(params['krecB'],params['nb_cells'])         # recovery for each BC
     W_krelB = connecter.weight_matrix_i_to_i(params['krelB']*params['betaB'],params['nb_cells'])   # relase for each BC
 
@@ -103,21 +129,25 @@ def run_Reciporcal(params, filepath = None, save_one = True, measure_n = False, 
     W_krelA = connecter.weight_matrix_i_to_i(params['krelA']*params['betaA'],params['nb_cells'])    # release for each AC
 
 
-
+    # collect matrices for B and A
     W_connectivity_B = (W_BB,W_BA) 
     W_connectivity_A = (W_AB,W_AA)
-    connecter.assemble_matrix_IPL([W_connectivity_B,W_connectivity_A])
+    connecter.assemble_matrix_IPL([W_connectivity_B,W_connectivity_A]) # makes ones big connectivity matrix for the IPL
 
+    # plot connectivity
     if filepath is not None:
         L = connecter.plot_weight_matrix_IPL()
         connecter.plot_weight_matrix_pooling(W_outB)
 
-    params = connecter.get_eig()
-    params = connecter.add_params()
 
-    # create and solve the system
+    params = connecter.get_eig()      # calculate eigenvalued of the connectivitymatrix
+    params = connecter.add_params()   # calculate more parameter of the connectivty 
+
+    # create the system
     sys = system(params, W_GG, W_ActG, W_GtoActG)
 
+
+    # create bipolar layer
     sys.create_layer([*W_connectivity_B],
                     W_ActB,W_BtoActB,
                     W_krecB,W_krelB,
@@ -125,7 +155,7 @@ def run_Reciporcal(params, filepath = None, save_one = True, measure_n = False, 
                     params['rectification_BC'],
                     F_inp)
 
-
+    # creade amacrine layer
     sys.create_layer([*W_connectivity_A],
                     W_ActA,W_AtoActA,
                     W_krecA,W_krelA,
@@ -134,12 +164,14 @@ def run_Reciporcal(params, filepath = None, save_one = True, measure_n = False, 
                     np.zeros(inp.shape))
 
 
-    #sys.dummy()
-    #print('simulation runs')
+
+    # solve the system 
     sys.solve_IPL_GainControl_Plasticity(GainF_B,N)
     Layers = sys.Layers_IPL
+
     #res,A = sys.solve_IPL_GainControl(N)
 
+    # solve GC layer and rectify output 
     VGsys,AGsys,NGsys = sys.solve_GC(N)
     RGsys, GGsys = sys.rectify(N,GainF_G)
     PVA = sys.PVA()
@@ -148,6 +180,8 @@ def run_Reciporcal(params, filepath = None, save_one = True, measure_n = False, 
     nb_cells = params['nb_cells']
     tps = params['tps']
 
+
+    # collect the output bipolar 
     VB = np.zeros((nb_cells,tps))
     OB = np.zeros((nb_cells,tps))
     NB = np.zeros((nb_cells,tps))
@@ -165,7 +199,7 @@ def run_Reciporcal(params, filepath = None, save_one = True, measure_n = False, 
         GB[c,:] = Layers[0]['G'][c] #[GainF_B(a) for a in AB[c,:]]
         RB[c,:] = NB[c,:]*GB[c,:]*OB[c,:]
         
-        
+    # collect output ganglion
     VA = np.zeros((nb_cells,tps))
     OA = np.zeros((nb_cells,tps))
     NA = np.zeros((nb_cells,tps))
@@ -186,7 +220,7 @@ def run_Reciporcal(params, filepath = None, save_one = True, measure_n = False, 
     [ant_time,ant_space,ant_time_drive,ant_space_drive] = sys.calculate_anticipation()
 
 
-
+    # colllect output GC
     VG = np.zeros((nb_cells,tps))
     NG = np.zeros((nb_cells,tps))
     AG = np.zeros((nb_cells,tps))
@@ -205,9 +239,7 @@ def run_Reciporcal(params, filepath = None, save_one = True, measure_n = False, 
     params['ant_time'] =ant_time
     params['ant_space'] =ant_space
 
-
-    # plot
-
+    # crop the output ans save
     middle_cell_BC = int(params['nb_cells']/2)
     middle_cell_GC = int(params['nb_GC_cells']/2)
     ran = params['saving_range']
@@ -252,12 +284,16 @@ def run_Reciporcal(params, filepath = None, save_one = True, measure_n = False, 
         with open(f'{filepath}/params', 'wb') as handle:
             pickle.dump(params, handle)
 
-    #return [max_RG,max_RB,max_drive,params['tps_rf_GC_mid'][middle_cell_GC],RG[middle_cell_GC,:],RB[middle_cell_GC,:]]
+
+    # measure onset anticipation, not used anymore 
     onset_RG = measure_onset_anticipation( RG[middle_cell_GC,:])
     onset_RB = measure_onset_anticipation( RB[middle_cell_GC,:])
 
+    # get the minimal occpancy value, not used anymore
     nmin_B = np.min(OB[middle_cell_BC,:-1])
     nmin_A = np.min(OA[middle_cell_BC,:-1])
+
+    
     if measure_n is True:
         return [max_RG,max_RB,max_drive,params['tps_rf_GC_mid'][middle_cell_GC], onset_RG,onset_RB,RG[middle_cell_GC,:],RB[middle_cell_GC,:],nmin_B,nmin_A]
     else:

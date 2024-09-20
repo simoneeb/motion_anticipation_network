@@ -19,8 +19,7 @@ class connectivity(object):
         self.duration = params['duration']
         self.time = np.arange(0,self.duration,self.dt)
         self.nb_GC_cells = params['nb_GC_cells']
-        self.rf_GC = params['rf_GC']
-        self.rf_GC_surround = params['rf_GC_s']
+
         self.w = params['w_GC']
 
         self.distance = params['distance']

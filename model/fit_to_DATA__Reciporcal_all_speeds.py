@@ -10,7 +10,7 @@ from joblib import Parallel,delayed
 
 from stimuli import stim_moving_object_for_2D_net
 from run_Reciporcal import run_Reciporcal
-from params_Reciporcal import make_params, modify_params
+from model.params_FB import make_params, modify_params
 
 
 
