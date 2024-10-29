@@ -3,7 +3,7 @@ import numpy as np
 import time
 from run_Reciporcal import run_Reciporcal
 from params_FF import load_params
-from loop_speeds import loop_speeds
+from loop_speeds_FB import loop_speeds
 
 
 
@@ -14,7 +14,7 @@ TODO : paralellize
 '''
 
 
-net_name = f'fb_linear'
+net_name = f'fb_linear_mV'
 stim_type = 'smooth'
 
 
@@ -24,12 +24,12 @@ params = load_params(filepath,'params')
  
  
 # parameter to loop over 
-param = 'wBA'                           
-vals =np.arange(0.,50., 10) #values for wBA in feedback
+# param = 'wBA'                           
+# vals =np.arange(0.,50., 10) #values for wBA in feedback
 
 
-# param = 'tau'
-# vals = np.linspace(1.,10,10)
+param = 'tau'
+vals = np.linspace(1.,10,10)
 
 # loop over valies
 for val in vals:
@@ -40,7 +40,7 @@ for val in vals:
     print(f'{param} = {val}')
 
     params['betaA'] = 0.0  # make sure no plasticity
-    params['wBA'] = 0.0    # make sure no feedback
+    params['wGA'] = 0.0    # make sure no feedforward
 
     filepathv = f'{filepath}/{param}/{val}'
     if not os.path.isdir(filepathv):
@@ -52,7 +52,7 @@ for val in vals:
         params[f'tauA'] = tauA
     else:   
         params[f'{param}'] = val
-    loop_speeds(filepathv,params,param) 
+    # loop_speeds(filepathv,params,param) 
 
     _ = run_Reciporcal(params = params, filepath = filepathv, save_one = True, stim_type='impulse')  
     _ = run_Reciporcal(params = params, filepath = filepathv, save_one = True, stim_type='step')  

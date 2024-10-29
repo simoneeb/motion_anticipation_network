@@ -33,7 +33,7 @@ def make_params(param_names = None, param_vals = None, filepath = None):
     start_tp = 1              # i don't rember       
     occluder_width = 2*std_GC # if bar dissapears behind occluder, widhth of the occluder 
 
-    w_BC = 0.4    # surround weight of spatial convolution, BC receptive field
+    w_BC = 0.     # surround weight of spatial convolution, BC receptive field
     w_GC = 0.0    # surround weight for GC pooling, if 0 no surround 
 
     tauA = 0.15   # Amacrine time constant 
@@ -44,14 +44,14 @@ def make_params(param_names = None, param_vals = None, filepath = None):
     tauOPL2 = 0.0876   # if biphasic, rebound time constanst 
     SF =0.             # monphasic if 0, biphasic is 1
 
-    input_scale = 1.   # scale factor for input amplitude TODO set to mV to have realistic amplitudes at the consecutive levels
+    input_scale = 20.   # scale factor for input amplitude TODO set to mV to have realistic amplitudes at the consecutive levels
 
     wAB = 10.          #  weight from bipolar to amacrine
     wBA = 10.           #  weight from amacrine to bipolar
 
   
     d = 1              # if connectivity is not nearest neightbors, distance for cennections
-    wGB = 0.0400       # weight of BC-GC pooling
+    wGB = 4.#0.0400       # weight of BC-GC pooling
     wGA = 0.0          # weight of AC-GC pooling
     wGA2 = 0.0
 
@@ -63,7 +63,7 @@ def make_params(param_names = None, param_vals = None, filepath = None):
     threshold_BC = 0           # thresold of BC/AC rectifiaction in rectification_BC is True
 
 
-    slope_GC = 1110            # slope of GC rectifiaction for transformation voltage to firing rate
+    slope_GC = 5            # slope of GC rectifiaction for transformation voltage to firing rate
     threshold_GC = 0.0         # threshold of GC rectifiaction for transformation voltage to firing rate
 
     slope_n = 1                # slope of rectifiaction for occupancy input
@@ -233,11 +233,7 @@ def modify_params(params, param_names,values):
 
 
 
-
-
-
 def load_params(filepath,params_name):
-
 
     with open(f'{filepath}/{params_name}', 'rb') as handle:
         params = pickle.load(handle)

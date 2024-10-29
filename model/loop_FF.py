@@ -3,7 +3,7 @@ import numpy as np
 import time
 from run_Reciporcal import run_Reciporcal
 from params_FF import load_params
-from loop_speeds import loop_speeds
+from loop_speeds_FF import loop_speeds
 
 
 
@@ -14,7 +14,7 @@ TODO : paralellize
 '''
 
 
-net_name = f'ff_linear'
+net_name = f'ff_linear_mV'
 stim_type = 'smooth'
 
 
@@ -25,7 +25,7 @@ params = load_params(filepath,'params')
  
 # parameter to loop over 
 param = 'wGA'                           
-vals =np.append(0.,np.round(np.logspace(.1,1,10)/100,4)) #values for wGA in feedforward
+vals =np.append(0.,np.round(np.linspace(1.,10,10),4)) #values for wGA in feedforward
 
 
 # param = 'tau'
@@ -54,5 +54,5 @@ for val in vals:
         params[f'{param}'] = val
     loop_speeds(filepathv,params,param) 
 
-    _ = run_Reciporcal(params = params, filepath = filepathv, save_one = True, stim_type='impulse')  
-    _ = run_Reciporcal(params = params, filepath = filepathv, save_one = True, stim_type='step')  
+    # _ = run_Reciporcal(params = params, filepath = filepathv, save_one = True, stim_type='impulse')  
+    # _ = run_Reciporcal(params = params, filepath = filepathv, save_one = True, stim_type='step')  

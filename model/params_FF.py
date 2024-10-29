@@ -44,15 +44,15 @@ def make_params(param_names = None, param_vals = None, filepath = None):
     tauOPL2 = 0.0876   # if biphasic, rebound time constanst 
     SF =0.             # monphasic if 0, biphasic is 1
 
-    input_scale = 1.   # scale factor for input amplitude TODO set to mV to have realistic amplitudes at the consecutive levels
+    input_scale = 20.   # scale factor for input amplitude TODO set to mV to have realistic amplitudes at the consecutive levels
 
     wAB = 10.          #  weight from bipolar to amacrine
     wBA = 0.           #  weight from amacrine to bipolar
 
   
     d = 1              # if connectivity is not nearest neightbors, distance for cennections
-    wGB = 0.0400       # weight of BC-GC pooling
-    wGA = 0.0126       # weight of AC-GC pooling
+    wGB = 4.00       # weight of BC-GC pooling
+    wGA = 1.26       # weight of AC-GC pooling
     wGA2 = 0.0
 
     rectification_BC = False   # if True, BC outputs are rectified
@@ -63,7 +63,7 @@ def make_params(param_names = None, param_vals = None, filepath = None):
     threshold_BC = 0           # thresold of BC/AC rectifiaction in rectification_BC is True
 
 
-    slope_GC = 1110            # slope of GC rectifiaction for transformation voltage to firing rate
+    slope_GC = 5            # slope of GC rectifiaction for transformation voltage to firing rate
     threshold_GC = 0.0         # threshold of GC rectifiaction for transformation voltage to firing rate
 
     slope_n = 1                # slope of rectifiaction for occupancy input

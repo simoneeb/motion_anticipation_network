@@ -17,7 +17,7 @@ plots and saves the outputs
 saves the parameter as a dict
 '''
 
-net_name = f'ff_linear'
+net_name = f'ff_linear_mV'
 
 
 # Simulate response to impule to show model STA
