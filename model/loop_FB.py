@@ -14,7 +14,7 @@ TODO : paralellize
 '''
 
 
-net_name = f'fb_linear_mV'
+net_name = f'fb_linear_512'
 stim_type = 'smooth'
 
 
@@ -24,12 +24,12 @@ params = load_params(filepath,'params')
  
  
 # parameter to loop over 
-# param = 'wBA'                           
-# vals =np.arange(0.,50., 10) #values for wBA in feedback
+param = 'wBA'                           
+vals =np.arange(0.,50., 10) #values for wBA in feedback
+vals = [0.,10.,]
 
-
-param = 'tau'
-vals = np.linspace(1.,10,10)
+# param = 'tau'
+# vals = np.linspace(1.,10,10)
 
 # loop over valies
 for val in vals:
@@ -52,7 +52,7 @@ for val in vals:
         params[f'tauA'] = tauA
     else:   
         params[f'{param}'] = val
-    # loop_speeds(filepathv,params,param) 
+    loop_speeds(filepathv,params,param) 
 
-    _ = run_Reciporcal(params = params, filepath = filepathv, save_one = True, stim_type='impulse')  
-    _ = run_Reciporcal(params = params, filepath = filepathv, save_one = True, stim_type='step')  
+    # _ = run_Reciporcal(params = params, filepath = filepathv, save_one = True, stim_type='impulse')  
+    # _ = run_Reciporcal(params = params, filepath = filepathv, save_one = True, stim_type='step')  

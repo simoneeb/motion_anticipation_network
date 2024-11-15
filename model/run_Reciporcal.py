@@ -268,12 +268,30 @@ def run_Reciporcal(params, filepath = None, save_one = True, measure_n = False, 
             'spat': spat[middle_cell_GC,:],
             'F':F_inp[middle_cell_GC,:],
                 }
-
-        
+    if save_one is False:
+        out = {
+            # 'res' : Layers,
+            'VB': VB[:,:],
+            'RB' : RB[:,:],
+            'VA': VA[:,:],
+            
+            'RA' : RA[:,:],
+            'VG' : VG[:,:],
+          
+            'RG' : RG[:,:],
+            # 'PVA': PVA,
+            'inp': inp[:,:],
+            'spat': spat[:,:],
+            'F':F_inp[:,:],
+                }
+             
+  
     dt = params['dt']
     max_RG = np.argmax(RG[middle_cell_GC,:])*dt
     max_RB = np.argmax(RB[middle_cell_GC,:])*dt
     max_drive = np.argmax(F_inp[middle_cell_GC,:])*dt
+
+    max_amp_B = np.max(VB[middle_cell_GC,:])
 
     if filepath is not None:
 
@@ -297,4 +315,4 @@ def run_Reciporcal(params, filepath = None, save_one = True, measure_n = False, 
     if measure_n is True:
         return [max_RG,max_RB,max_drive,params['tps_rf_GC_mid'][middle_cell_GC], onset_RG,onset_RB,RG[middle_cell_GC,:],RB[middle_cell_GC,:],nmin_B,nmin_A]
     else:
-        return [max_RG,max_RB,max_drive,params['tps_rf_GC_mid'][middle_cell_GC], onset_RG,onset_RB,RG[middle_cell_GC,:],RB[middle_cell_GC,:],VG[middle_cell_GC,:]]
+        return [max_RG,max_RB,max_drive,params['tps_rf_GC_mid'][middle_cell_GC],max_amp_B, onset_RG,onset_RB,RG[middle_cell_GC,:],RB[middle_cell_GC,:],VG[middle_cell_GC,:]]

@@ -63,7 +63,7 @@ def make_params(param_names = None, param_vals = None, filepath = None):
     threshold_BC = 0           # thresold of BC/AC rectifiaction in rectification_BC is True
 
 
-    slope_GC = 5            # slope of GC rectifiaction for transformation voltage to firing rate
+    slope_GC = 30           # slope of GC rectifiaction for transformation voltage to firing rate
     threshold_GC = 0.0         # threshold of GC rectifiaction for transformation voltage to firing rate
 
     slope_n = 1                # slope of rectifiaction for occupancy input

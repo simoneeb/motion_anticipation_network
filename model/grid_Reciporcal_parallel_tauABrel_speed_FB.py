@@ -3,7 +3,7 @@ import os
 import numpy as np
 from joblib import Parallel,delayed
 from run_Reciporcal import run_Reciporcal
-from model.params_FB import make_params
+from params_FB import make_params
 import time
 import pandas as pd
 import pickle
@@ -14,7 +14,7 @@ from utils import measure_onset_anticipation
 
 
 
-net_name = f'fb_linear_600'
+net_name = f'fb_linear_512'
 
 stim_type = 'smooth'
 
@@ -30,7 +30,7 @@ speeds = [0.1,0.2,0.3,0.4,0.4,0.5,0.6,0.7,0.8,0.9,1.0,2.0]
 speeds = np.asarray([1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9])
 speeds = np.asarray([0.1,0.2,0.3,0.4,0.4,0.5,0.6,0.7,0.8,0.9,1.0,2.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9])
 speeds = speeds[::2]
-speeds = np.round(np.arange(0.1,2.0,0.05),2)
+speeds = np.round(np.arange(0.1,4.0,0.05),2)
 
 
 
@@ -105,7 +105,7 @@ def run(val2,si):
     params['tauB'] = tauB
     #params = make_params(param_names = ['speed','wAB'], param_vals=[si,wAB])
 
-    [peak_RG,peak_RB,peak_drive,tp_rf_GC_mid,onset_RG,onset_RB,RG,RB,VG] = run_Reciporcal(params = params)   
+    [peak_RG,peak_RB,peak_drive,tp_rf_GC_mid,amp_RB,onset_RG,onset_RB,RG,RB,VG] = run_Reciporcal(params = params)   
 
 
     # [ant_space,ant_time,ant_space_drive,ant_time_drive,RG] = run_Reciporcal(params = params)   
@@ -127,6 +127,7 @@ def run(val2,si):
             'speed' : si,
             'peak_RG' : peak_RG,
             'peak_RB' : peak_RB,
+            'amp_RB' : amp_RB,
             'peak_drive' : peak_drive,
             # 'peak_RG_pooling' : peak_RG_pooling,
             # 'peak_RB_pooling' : peak_RB_pooling,
@@ -171,7 +172,7 @@ for i,xi in enumerate(X):
 print(sys.getsizeof(df))
 
 home = os.path.expanduser("~")
-filepath = f'{home}/Documents/Simulations/motion_anticipation_network/{net_name}'
+filepath = f'../output/{net_name}'
 if not os.path.isdir(filepath):
     os.makedirs(filepath)
 

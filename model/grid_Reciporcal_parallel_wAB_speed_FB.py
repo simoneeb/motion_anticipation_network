@@ -3,7 +3,7 @@ import os
 import numpy as np
 from joblib import Parallel,delayed
 from run_Reciporcal import run_Reciporcal
-from model.params_FB import make_params
+from params_FB import make_params
 import time
 import pandas as pd
 import pickle
@@ -12,7 +12,7 @@ import sys
 
 from utils import measure_onset_anticipation
 
-net_name = f'fb_linear'
+net_name = f'fb_linear_512'
 
 stim_type = 'smooth'
 
@@ -22,9 +22,10 @@ vals2 = np.linspace(1,81,n_params)
 vals2 = np.linspace(1,101,n_params) *46.0
 vals2 = np.linspace(1,51,n_params) 
 
-speeds = [0.2,0.23,0.25,0.27,0.3,0.32,0.35,0.37,0.4,0.42,0.45,0.47,0.5]
-speeds = np.asarray([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9])
-speeds = np.asarray([0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9])
+# speeds = [0.2,0.23,0.25,0.27,0.3,0.32,0.35,0.37,0.4,0.42,0.45,0.47,0.5]
+# speeds = np.asarray([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9])
+# speeds = np.asarray([0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9])
+speeds = np.round(np.arange(0.1,4.0,0.05),2)
 
 nb_jobs = len(vals2)*len(speeds)
 dur = (nb_jobs*11.5)/60
@@ -85,7 +86,7 @@ def run(val2,si):
     params['wBA'] = wBA
     #params = make_params(param_names = ['speed','wAB'], param_vals=[si,wAB])
 
-    [peak_RG,peak_RB,peak_drive,tp_rf_GC_mid,onset_RG,onset_RB,RG,RB,VG] = run_Reciporcal(params = params)   
+    [peak_RG,peak_RB,peak_drive,tp_rf_GC_mid,amp_RB,onset_RG,onset_RB,RG,RB,VG] = run_Reciporcal(params = params)   
 
 
     # [ant_space,ant_time,ant_space_drive,ant_time_drive,RG] = run_Reciporcal(params = params)   
@@ -105,6 +106,7 @@ def run(val2,si):
             'speed' : si,
             'peak_RG' : peak_RG,
             'peak_RB' : peak_RB,
+            'amp_RB' : amp_RB,
             'peak_drive' : peak_drive,
             # 'peak_RG_pooling' : peak_RG_pooling,
             # 'peak_RB_pooling' : peak_RB_pooling,
@@ -121,7 +123,7 @@ def run(val2,si):
 
 start = time.time()
 
-X = Parallel(n_jobs = 20, verbose=10)(delayed(run)(i[0],i[1]) for i in grid)
+X = Parallel(n_jobs = 10, verbose=10)(delayed(run)(i[0],i[1]) for i in grid)
 
 print(sys.getsizeof(X))
 
@@ -152,18 +154,18 @@ for i,xi in enumerate(X):
 print(sys.getsizeof(df))
 
 home = os.path.expanduser("~")
-filepath = f'{home}/Documents/Simulations/motion_anticipation_network/{net_name}'
+filepath = f'../output/{net_name}'
 if not os.path.isdir(filepath):
     os.makedirs(filepath)
 
-df.to_csv(f'{filepath}/anticipation_data_wAB_tauA02.csv')
-dfresRG.to_csv(f'{filepath}/responses_RG_wAB_tauA02.csv')
-dfresRB.to_csv(f'{filepath}/responses_RB_wAB_tauA02.csv')
+df.to_csv(f'{filepath}/anticipation_data_wAB.csv')
+dfresRG.to_csv(f'{filepath}/responses_RG_wAB.csv')
+dfresRB.to_csv(f'{filepath}/responses_RB_wAB.csv')
 
 stop = time.time()
 params = X[-1][-1]
 
-with open(f'{filepath}/params_grid_wAB_tauA02', 'wb') as handle:
+with open(f'{filepath}/params_grid_wAB', 'wb') as handle:
             pickle.dump(params, handle)
 
 

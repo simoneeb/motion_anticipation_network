@@ -21,6 +21,7 @@ def loop_speeds(filepath,params,param):
     # speeds = np.round(np.arange(2.0,4.0,0.1),2)
     # speeds = np.round(np.arange(4.1,6.0,0.1),2)
     speeds = speeds[::2]
+    speeds = np.array([0.8,1.2])
 
 
     # loop over speeds 
@@ -29,6 +30,6 @@ def loop_speeds(filepath,params,param):
         stim_name = f'{stim_type}_{si}'
         params = modify_params(params,['speed'],[si])
 
-        _= run_Reciporcal(params = params, filepath =f'{filepath}/{stim_name}', save_one = True,stim_type=stim_type)  
+        _= run_Reciporcal(params = params, filepath =f'{filepath}/{stim_name}', save_one = False,stim_type=stim_type)  
 
     # plot_speeds(filepath,param,speeds)

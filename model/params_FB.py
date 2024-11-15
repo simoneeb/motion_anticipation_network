@@ -9,8 +9,8 @@ def make_params(param_names = None, param_vals = None, filepath = None):
 
 
     # define parameter
-    nb_cells = 300       # numner of BC and AC cells
-    nb_GC_cells = 300    # number of GC cells, set same as nb_cells
+    nb_cells = 512     # numner of BC and AC cells
+    nb_GC_cells = 512   # number of GC cells, set same as nb_cells
     saving_range = 50    # numner of BC responses that are saved when only one GC is saved
     std_GC = 0.065       # sigma for pooling GC center
     std_GC_s = 0.485     # sigma for pooling GC surround,  not used
@@ -63,7 +63,7 @@ def make_params(param_names = None, param_vals = None, filepath = None):
     threshold_BC = 0           # thresold of BC/AC rectifiaction in rectification_BC is True
 
 
-    slope_GC = 5            # slope of GC rectifiaction for transformation voltage to firing rate
+    slope_GC = 30           # slope of GC rectifiaction for transformation voltage to firing rate
     threshold_GC = 0.0         # threshold of GC rectifiaction for transformation voltage to firing rate
 
     slope_n = 1                # slope of rectifiaction for occupancy input
