@@ -90,9 +90,9 @@ class Model(object):
 
         self.stimname = stimname
 
-        self.stimdir = f'../output/{self.netname}/{stimname}'
+        self.stimdir = f'../output/{self.netname}/{self.stimname}'
 
-        print(self.stimdir)
+        # print(self.stimdir)
 
         if not os.path.isdir(self.stimdir):
             os.mkdir(self.stimdir)
@@ -159,13 +159,30 @@ class Model(object):
         wsyn: Hz
 
         """
+        
+        
+        # equation for synaptic coupling
+        eqs_synb = """vsynb_post = wsyn*v_pre : volt/second (summed)
+
+        wsyn: Hz
+
+        """
+        
+        
+        # equation for synaptic coupling
+        eqs_syna = """vsyna_post = wsyn*v_pre : volt/second (summed)
+
+        wsyn: Hz
+
+        """
 
 
         # equation that defines GC integration
-        eqs_gc = """ dv/dt = -(1/tau) * v + vsyn : volt
+        eqs_gc = """ dv/dt = -(1/tau) * v + vsynb + vsyna : volt
 
         tau : second
-        vsyn : volt/second
+        vsyna : volt/second
+        vsynb : volt/second
         """
 
 
@@ -190,8 +207,12 @@ class Model(object):
         synba.connect(i=sources, j=targets)      # connect sources and targets AC to BC
 
 
-        syngb = Synapses(bc,gc,eqs_syn)     # create synapses BC to GC
+        syngb = Synapses(bc,gc,eqs_synb)     # create synapses BC to GC
         syngb.connect()                     # connect all to all
+
+
+        synga = Synapses(ac,gc,eqs_syna)     # create synapses BC to GC
+        synga.connect()                     # connect all to all
 
 
         # set parameter
@@ -207,6 +228,7 @@ class Model(object):
         # assign gaussian weighting to synapses from BC to GC
         for n in range(self.N):
             syngb.wsyn[n,:] =self.wGB * DOG(np.arange(self.N),n,self.sig_pool/self.spacing)*Hz
+            synga.wsyn[n,:] =self.wGA * DOG(np.arange(self.N),n,self.sig_pool/self.spacing)*Hz
 
 
         # transform input as timed array for integration
