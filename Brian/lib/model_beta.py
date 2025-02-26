@@ -255,7 +255,8 @@ class Model(object):
 
         else: 
             BCgrid = monbc.v/mV
-            return BCgrid[self.N//2,:]
+            GCgrid = mongc.v/mV
+            return BCgrid[self.N//2,:],GCgrid[self.N//2,:]
 
 
 
